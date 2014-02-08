@@ -23,7 +23,7 @@
 
             <div class="col-lg-8">
 
-                <h1><a href="blog-post.html">A Blog Home Template for Bootstrap 3</a>
+                <h1><a href="{% url "blogpost" %}">A Blog Home Template for Bootstrap 3</a>
                 </h1>
                 <p class="lead">by <a href="#">Start Bootstrap</a>
                 </p>

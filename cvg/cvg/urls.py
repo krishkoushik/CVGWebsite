@@ -11,7 +11,9 @@ urlpatterns = patterns('',
     url(r'^projects/$', 'website.views.projects', name='projects'),
     url(r'^resources/$', 'website.views.resources', name='resources'),
     url(r'^blog/$', 'website.views.blog', name='blog'),
+    url(r'^blog/blog-post$', 'website.views.blogpost', name='blogpost'),
     url(r'^contact/$', 'website.views.contact', name='contact'),
+    url(r'^projects/projectinfo$', 'website.views.projectinfo', name='projectinfo'),
     # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
