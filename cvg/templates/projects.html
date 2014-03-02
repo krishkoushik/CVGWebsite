@@ -37,13 +37,46 @@
 
         <hr>
 		{% endfor %}
-       
-        <div class="row text-center">
+		
+		
+	    </div>
+    	
+       <div class="row text-center">
 
             <div class="col-lg-12">
-                <ul class="pagination">
-                    <li><a href="#">&laquo;</a>
+       
+            <div class="pagination">
+    <span class="step-links">
+        {% if projects.has_previous %}
+           <a href="?page={{ projects.previous_page_number }}">previous</a> </li>
+        {% endif %}
+		
+        <span class="current">
+           Page {{ projects.number }} of {{ projects.paginator.num_pages }}.
+        </span>
+		
+        {% if projects.has_next %}
+            <a href="?page={{ projects.next_page_number }}">next</a>
+        {% endif %}
+        
+    </span>
+</div>
+
+ </div>
+
+        </div>
+             <!--   
+             
+              
+            
+             <ul class="pagination">
+                    <li><a href="?page={{ 1 }}">&laquo;</a>
                     </li>
+                    {% if projects.has_previous %}
+                    <li>
+            			<a href="?page={{ projects.previous_page_number }}">{{ projects.number}}</a>
+            		</li>
+        			{% endif %}
                     <li class="active"><a href="#">1</a>
                     </li>
                     <li><a href="#">2</a>
@@ -56,12 +89,11 @@
                     </li>
                     <li><a href="#">&raquo;</a>
                     </li>
-                </ul>
-            </div>
+                </ul>  
+            -->
 
-        </div>
 
-    </div>
+    
     <!-- /.container -->
 
     <div class="container">
