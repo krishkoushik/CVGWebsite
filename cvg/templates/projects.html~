@@ -21,7 +21,7 @@
         <div class="row">
 
             <div class="col-md-7">
-                <a href="{% url "projectinfo" %}">
+                <a href="{% url "projectinfo" %}/{{p.id}}">
                     <img class="img-responsive" src="{{ p.main_imag }}">
                 </a>
             </div>
@@ -30,7 +30,7 @@
                 <h3>{{p.title}}</h3>
                
                 <p>{{p.brief}}</p>
-                <a class="btn btn-primary" href="{% url "projectinfo" %}">View Project <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary" href="/projects/projectinfo/{{p.id}}">View Project <i class="fa fa-angle-right"></i></a>
             </div>
 
         </div>
@@ -48,18 +48,17 @@
             <div class="pagination">
     <span class="step-links">
         {% if projects.has_previous %}
-         <li>   <a href="?page={{ projects.previous_page_number }}">previous</a> </li>
+           <a href="?page={{ projects.previous_page_number }}">previous</a> </li>
         {% endif %}
-		<li> 
+		
         <span class="current">
            Page {{ projects.number }} of {{ projects.paginator.num_pages }}.
         </span>
-		</li>
-		<li>
+		
         {% if projects.has_next %}
             <a href="?page={{ projects.next_page_number }}">next</a>
         {% endif %}
-        </li>
+        
     </span>
 </div>
 

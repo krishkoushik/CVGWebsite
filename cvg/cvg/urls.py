@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^blog/$', 'website.views.blog', name='blog'),
     url(r'^blog/blog-post$', 'website.views.blogpost', name='blogpost'),
     url(r'^contact/$', 'website.views.contact', name='contact'),
-    url(r'^projects/projectinfo$', 'website.views.projectinfo', name='projectinfo'),
+    url(r'^projects/projectinfo/(?P<project_id>\d+)$', 'website.views.projectinfo', name='projectinfo'),
     
     
     #Url for online judge portal

@@ -42,5 +42,8 @@ def blogpost(request):
 def contact(request):
 	return render_to_response("contact.html",context_instance=RequestContext(request))
 	
-def projectinfo(request):
-	return render_to_response("projectinfo.html",context_instance=RequestContext(request))
+def projectinfo(request,project_id):
+	project=Project.objects.get(id=project_id)
+	images=project.imag.all()
+	videos=project.videos.all()
+	return render(request,"projectinfo.html",{'project':project,'images':images,'videos':videos})

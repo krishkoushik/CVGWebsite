@@ -6,7 +6,7 @@ class Photo(models.Model):
 	image=models.ImageField(upload_to='media/projects')
 	
 	def __unicode__(self):
-		return self.title
+		return self.image
 	
 	
 class Video(models.Model):
@@ -14,7 +14,7 @@ class Video(models.Model):
 	video=models.URLField()
 	
 	def __unicode__(self):
-		return self.name
+		return self.video
 	
 	
 

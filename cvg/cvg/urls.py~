@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^blog/$', 'website.views.blog', name='blog'),
     url(r'^blog/blog-post$', 'website.views.blogpost', name='blogpost'),
     url(r'^contact/$', 'website.views.contact', name='contact'),
-    url(r'^projects/projectinfo$', 'website.views.projectinfo', name='projectinfo'),
+    url(r'^projects/projectinfo/(?P<Project_id>\d+)$', 'website.views.projectinfo', name='projectinfo'),
     
     
     #Url for online judge portal
@@ -34,5 +34,5 @@ urlpatterns = patterns('',
     
 )
 
-urlpatterns += staticfiles_urlpatterns()
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+#urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
