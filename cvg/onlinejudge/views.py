@@ -2,18 +2,23 @@ from django.shortcuts import HttpResponse,render_to_response, RequestContext, Ht
 import re
 from django.contrib.auth import authenticate
 from django.contrib import auth
-from onlinejudge.models import UploadFileForm, CodeToCompile
+from onlinejudge.models import UploadFileForm, CodeToCompile, Problem
 import os
 import subprocess,shlex
 from django.core.files import File
 
-def insert_to_queue(i):
-	print "inserted"
+def challenges(request):
+#Add login if the user needs to be logged in for viewing the challenges
+	return render_to_response("challenges.html",context_instance=RequestContext(request))
 
-def handle_uploaded_file(request):
+def practice(request):
+#Add login if the user needs to be logged in for viewing the challenges
+	return render_to_response("practice.html",context_instance=RequestContext(request))
+
+
+def handle_uploaded_file(request,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
-		
 #Compiling code and storing the compile message in object
 	code = CodeToCompile.objects.get(user=request.user)
 	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
@@ -47,7 +52,7 @@ def handle_uploaded_file(request):
 	else :
 		code.compilemessage = "Compile Failed"
 	
-	#writing runtime message (error) to pointed by object
+	#writing runtime message (error) to file pointed by object
 	fil = File(open("runtimemessage.txt","r"))
 	fi = open(code.runtimeoutp,"w")
 	fi.write(fil.read())
@@ -78,7 +83,7 @@ def gen():
 	fil.close()
 
 submission_message=''
-def upload_file(request):
+def upload_file(request,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
 	l=[]
@@ -87,40 +92,58 @@ def upload_file(request):
 	if request.method == 'POST':
 		if fo.is_valid():
 			form = request.FILES
-			obj,created = CodeToCompile.objects.get_or_create(user=request.user)
+#Problem object with problem id will be ensured during problem creation
+			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=Problem.objects.get(id=problem_id))
 			if created is True:
 				obj.compilemessage="Compiling..."
-				obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
-				obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
-				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
+
+#Creating a file with the uploaded name
+				obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				fil = open(obj.fil_e,"w+")
+				k = fo.cleaned_data["fil_e"].read()
+				fil.write(k)
+				fil.close()
+
+#Creating files for compile and runtime output
+				obj.compileoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_compileroutput"
+				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_runtimeroutput"
+
+#Relating to the problem
+				obj.problemid=Problem.objects.get(id=problem_id)
+				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.save()
+
 			else:
+
+#Deleting the previous file for this object and saving the new uploaded file
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
-				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				obj.save()
 				fil = open(obj.fil_e,"w+")
 				k = fo.cleaned_data["fil_e"].read()
 				fil.write(k)
 				fil.close()
+
+#saving the new compile and runtime files
 				fil = open(obj.compileoutp,"w+")
 				fil.close()
 				fil = open(obj.runtimeoutp,"w+")
 				fil.close()
-			insert_to_queue(obj.id)
+
 		else:
 			submission_message='Improper Upload ...'
-			return HttpResponseRedirect("/onlinejudge/submissionpage")
+			return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
 	else:
 		submission_message='Improper Upload ...'
-		return HttpResponseRedirect("/onlinejudge/submissionpage")
+		return HttpResponseRedirect("/onlinejudge/submissionpage"+str(problem_id))
 	
-	return HttpResponseRedirect("/onlinejudge/handle_uploaded_file")
+	return HttpResponseRedirect("/onlinejudge/handle_uploaded_file/"+str(problem_id))
 
-def submissionpage(request):
+def submissionpage(request,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
 	form = UploadFileForm();
-	return render_to_response("submissionpage.html",{'form':form,'message':submission_message},context_instance=RequestContext(request))
+	return render_to_response("submissionpage.html",{'form':form,'message':submission_message,'problem_id':problem_id,},context_instance=RequestContext(request))
 
 def login(request):
 	if not request.user.is_anonymous():

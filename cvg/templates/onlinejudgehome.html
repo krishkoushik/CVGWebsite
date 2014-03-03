@@ -3,8 +3,9 @@
 		{{string}}
 		{% if not user.is_anonymous %}
 			<h4>Welcome, {{request.user}}</h4>
+			<h2><a href="/onlinejudge/challenges/">Challenges</a></h2>
+			<h2><a href="/onlinejudge/practice/">Practice</a></h2>
 			<a href='/onlinejudge/logout/'>Logout</a>
-			<a href="/onlinejudge/submissionpage/">Submit</a>
 		{% else %}
 			<div>
 				<form method="POST" action='/onlinejudge/login/'>

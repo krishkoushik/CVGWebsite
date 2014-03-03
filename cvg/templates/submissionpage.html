@@ -3,7 +3,7 @@
 		Hello, You are in the submission page, {{user}}
 		<br/>
 		<a href="/onlinejudge/logout/">Logout</a>
-		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/' method='POST'>
+		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{problem_id}}/' method='POST'>
 			{% csrf_token %}
 				{{form}}
 			<input type="submit" name="submit" value="Submit">
