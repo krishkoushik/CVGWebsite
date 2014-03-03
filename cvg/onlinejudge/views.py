@@ -2,20 +2,31 @@ from django.shortcuts import HttpResponse,render_to_response, RequestContext, Ht
 import re
 from django.contrib.auth import authenticate
 from django.contrib import auth
-from onlinejudge.models import UploadFileForm, CodeToCompile
+from onlinejudge.models import UploadFileForm, CodeToCompile, RequestQueue
 import os
 import subprocess,shlex
 from django.core.files import File
+import thread
 
-def insert_to_queue(i):
-	print "inserted"
+def process_queue():
+	
+	while True:
+		req=RequestQueue.objects.all()
+		print "hello"
+		if req.exists():
+			for qr in req:
+				handle_uploaded_file(qr.codetocompile.id)
+				qr.codetocompile.processed="y"
+				qr.codetocompile.save()
+				qr.delete()
+		else:
+			break
 
-def handle_uploaded_file(request):
-	if request.user.is_anonymous():
-		return HttpResponseRedirect("/onlinejudge");
+
+def handle_uploaded_file(obid):
 		
 #Compiling code and storing the compile message in object
-	code = CodeToCompile.objects.get(user=request.user)
+	code = CodeToCompile.objects.get(id=obid)
 	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
 	comp = open("compilemessage.txt","wb+")#creating a compile message file
 	out=subprocess.call(arg,stderr=comp,shell=False)
@@ -65,17 +76,22 @@ def handle_uploaded_file(request):
 
 	
 	#To be transferred to another function
-	a = open(code.fil_e,"r")
-	b = open(code.compileoutp,"r")
-	c = open(code.runtimeoutp,"r")
-	return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code},context_instance=RequestContext(request))
 
-def gen():
-	complmess = []
-	fil = open(code.compileout.name, 'r+')
-	for chunk in fil:
-		complmess.append(chunk)
-	fil.close()
+def viewsubmission(request,obid):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	
+	code=CodeToCompile.objects.get(id=obid)
+	if code.user!=request.user:
+		return HttpResponseRedirect("/onlinejudge")
+	if code.processed=='y':
+		
+		a = open(code.fil_e,"r")
+		b = open(code.compileoutp,"r")
+		c = open(code.runtimeoutp,"r")
+		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code},context_instance=RequestContext(request))
+	else : 
+		return render_to_response('runn.html',{'obid':obid})
 
 submission_message=''
 def upload_file(request):
@@ -93,10 +109,12 @@ def upload_file(request):
 				obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
 				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
+				obj.processed="n"
 				obj.save()
 			else:
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
 				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.processed="n"
 				obj.save()
 				fil = open(obj.fil_e,"w+")
 				k = fo.cleaned_data["fil_e"].read()
@@ -106,7 +124,17 @@ def upload_file(request):
 				fil.close()
 				fil = open(obj.runtimeoutp,"w+")
 				fil.close()
-			insert_to_queue(obj.id)
+			
+			req=RequestQueue.objects.all()
+			if req.exists():	
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+							
+			else : 
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+				thread.start_new_thread(process_queue,())
+
+			print "inserted"
+			obid=obj.id
 		else:
 			submission_message='Improper Upload ...'
 			return HttpResponseRedirect("/onlinejudge/submissionpage")
@@ -114,7 +142,7 @@ def upload_file(request):
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage")
 	
-	return HttpResponseRedirect("/onlinejudge/handle_uploaded_file")
+	return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(obid))
 
 def submissionpage(request):
 	if request.user.is_anonymous():
@@ -142,9 +170,6 @@ def login(request):
 			toreturn = {'string':"Incorrect",}
 			return render_to_response("onlinejudgehome.html", toreturn, context_instance=RequestContext(request))
 	else:
-#		print request
-#		toreturn = {'string':'',}
-#		return render_to_response("onlinejudgehome.html", toreturn, context_instance=RequestContext(request))
 		return HttpResponseRedirect("/onlinejudge")
 
 def logout(request):
@@ -153,8 +178,6 @@ def logout(request):
 	return HttpResponseRedirect("/onlinejudge")
 
 def home(request):
-	#if request.user.is_anonymous():
-	#	return HttpResponseRedirect("/onlinejudge/login");
 	toreturn = {'string':"",}
 	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
 
