@@ -13,7 +13,7 @@ urlpatterns = patterns('',
     url(r'^blog/$', 'website.views.blog', name='blog'),
     url(r'^blog/blog-post$', 'website.views.blogpost', name='blogpost'),
     url(r'^contact/$', 'website.views.contact', name='contact'),
-    url(r'^projects/projectinfo$', 'website.views.projectinfo', name='projectinfo'),
+    url(r'^projects/projectinfo/(?P<Project_id>\d+)$', 'website.views.projectinfo', name='projectinfo'),
     
     
     #Url for online judge portal
@@ -22,7 +22,7 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/logout/$', 'onlinejudge.views.logout', name='onlinejudgelogout'),
     url(r'^onlinejudge/submissionpage/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
     url(r'^onlinejudge/upload_file/$', 'onlinejudge.views.upload_file', name='upload_file'),
-    url(r'^onlinejudge/handle_uploaded_file/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
+    url(r'^onlinejudge/handle_uploaded_file/$', 'onlinejudge.views.handle_uploaded_file', name='viewsubmission'),
     # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
@@ -30,4 +30,9 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    
+    
 )
+
+#urlpatterns += staticfiles_urlpatterns()
+#urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
