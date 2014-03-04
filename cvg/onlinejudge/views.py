@@ -2,23 +2,28 @@ from django.shortcuts import HttpResponse,render_to_response, RequestContext, Ht
 import re
 from django.contrib.auth import authenticate
 from django.contrib import auth
-from onlinejudge.models import UploadFileForm, CodeToCompile, Problem
-from onlinejudge.models import RequestQueue
+from onlinejudge.models import UploadFileForm, CodeToCompile, Problem, Contest
+from onlinejudge.models import RequestQueue, CurrentContest
 import os
 import subprocess,shlex
 from django.core.files import File
 import thread
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
-def challenges(request):
+def contest(request,contest_id):
+	cont = get_object_or_404(Contest,id=contest_id)
+	return render_to_response("ContestProblems.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
+
+def challenges(request,contest_id):
 #Add login if the user needs to be logged in for viewing the challenges
-	prob = Problem.objects.all() #Give the specific list for the contest
-	return render_to_response("challenges.html",{'problems':prob,},context_instance=RequestContext(request))
+	cont = get_object_or_404(Contest,id=contest_id)
+	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
 def practice(request):
 #Add login if the user needs to be logged in for viewing the challenges
-	prob = Problem.objects.all() #Give the specific list for the contest
-	return render_to_response("practice.html",{'problems':prob,},context_instance=RequestContext(request))
+	contests = Contest.objects.filter(~Q(id=CurrentContest.objects.get(id=1).contest.id))
+	return render_to_response("practice.html",{'contests':contests,},context_instance=RequestContext(request))
 
 def process_queue():
 	
@@ -205,6 +210,6 @@ def logout(request):
 	return HttpResponseRedirect("/onlinejudge")
 
 def home(request):
-	toreturn = {'string':"",}
+	toreturn = {'string':"",'curr_contest':CurrentContest.objects.get(id=1).contest.id}
 	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
 

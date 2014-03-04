@@ -20,11 +20,13 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/$', 'onlinejudge.views.home', name='onlinejudgehome'),
     url(r'^onlinejudge/login/$', 'onlinejudge.views.login', name='onlinejudgelogin'),
     url(r'^onlinejudge/logout/$', 'onlinejudge.views.logout', name='onlinejudgelogout'),
-    url(r'^onlinejudge/challenges/$', 'onlinejudge.views.challenges', name='challenges'),
+    url(r'^onlinejudge/challenges/(?P<contest_id>\d+)/$', 'onlinejudge.views.challenges', name='challenges'),
     url(r'^onlinejudge/practice/$', 'onlinejudge.views.practice', name='practice'),
     url(r'^onlinejudge/submissionpage/(?P<problem_id>\d+)/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
     url(r'^onlinejudge/upload_file/(?P<problem_id>\d+)/$', 'onlinejudge.views.upload_file', name='upload_file'),
     url(r'^onlinejudge/viewsubmission/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
+    url(r'^onlinejudge/contest/(?P<contest_id>\d+)/$', 'onlinejudge.views.contest', name='contest'),
+
    # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
