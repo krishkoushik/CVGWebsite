@@ -12,9 +12,11 @@
     <!-- Bootstrap core CSS -->
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
 
+
     <!-- Add custom CSS here -->
     <link href="{{ STATIC_URL }}css/modern-business.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}font-awesome/css/font-awesome.min.css" rel="stylesheet">
+            <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
 </head>
 
 <body>
