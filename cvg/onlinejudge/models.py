@@ -8,7 +8,6 @@ class Problem(models.Model):
 	compile_line = models.CharField(max_length=300)
 
 
-
 class CodeToCompile(models.Model):
 	user = models.ForeignKey(User)
 	fil_e = models.CharField(max_length=100)
@@ -18,8 +17,11 @@ class CodeToCompile(models.Model):
 	runtimemessage = models.CharField(max_length = 100)
 	problemid = models.ForeignKey(Problem)
 	status = models.CharField(max_length=100)
-	
-
+	processed = models.CharField(max_length=1)
 
 class UploadFileForm(forms.Form):
 	fil_e  = forms.FileField()
+
+
+class RequestQueue(models.Model):
+	codetocompile=models.OneToOneField(CodeToCompile)

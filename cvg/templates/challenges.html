@@ -1,9 +1,11 @@
 
 	{% include "navbar.html" %}
 	<h2>Challenge Problems</h2>
-	<a href="/onlinejudge/submissionpage/1"> Problem 1</a>
-
-	<a href="/onlinejudge/submissionpage/2"> Problem 2</a>
+{% for i in problems %}
+<div>
+	<a href="/onlinejudge/submissionpage/{{i.id}}"> Problem {{i.id}}</a>
+</div>
+{% endfor %}
 	</body>
 	</html>
 

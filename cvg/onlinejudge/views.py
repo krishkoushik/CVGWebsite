@@ -3,24 +3,39 @@ import re
 from django.contrib.auth import authenticate
 from django.contrib import auth
 from onlinejudge.models import UploadFileForm, CodeToCompile, Problem
+from onlinejudge.models import RequestQueue
 import os
 import subprocess,shlex
 from django.core.files import File
+import thread
+from django.shortcuts import get_object_or_404
 
 def challenges(request):
 #Add login if the user needs to be logged in for viewing the challenges
-	return render_to_response("challenges.html",context_instance=RequestContext(request))
+	prob = Problem.objects.all() #Give the specific list for the contest
+	return render_to_response("challenges.html",{'problems':prob,},context_instance=RequestContext(request))
 
 def practice(request):
 #Add login if the user needs to be logged in for viewing the challenges
-	return render_to_response("practice.html",context_instance=RequestContext(request))
+	prob = Problem.objects.all() #Give the specific list for the contest
+	return render_to_response("practice.html",{'problems':prob,},context_instance=RequestContext(request))
+
+def process_queue():
+	
+	while True:
+		req=RequestQueue.objects.all()
+		if req.exists():
+			for qr in req:
+				handle_uploaded_file(qr.codetocompile.id)
+				qr.delete()
+		else:
+			break
 
 
-def handle_uploaded_file(request,problem_id):
-	if request.user.is_anonymous():
-		return HttpResponseRedirect("/onlinejudge");
+def handle_uploaded_file(obid):
+		
 #Compiling code and storing the compile message in object
-	code = CodeToCompile.objects.get(user=request.user)
+	code = get_object_or_404(CodeToCompile,id=obid)
 	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
 	comp = open("compilemessage.txt","wb+")#creating a compile message file
 	out=subprocess.call(arg,stderr=comp,shell=False)
@@ -44,7 +59,6 @@ def handle_uploaded_file(request,problem_id):
 		arg=shlex.split("./output")
 		runt = open("runtimemessage.txt","wb+")
 		out1=subprocess.Popen(arg,stderr=runt,shell=False)
-		print out1.pid
 		out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid)],shell=False);
 		stdo,stder = out1.communicate()
 		stdo,stder = out2.communicate()
@@ -63,6 +77,7 @@ def handle_uploaded_file(request,problem_id):
 	code.runtimemessage = fil.readline()
 	fi.close()
 
+	code.processed='y'
 	code.save()
 
 	#deleting the temporarily created files
@@ -70,17 +85,22 @@ def handle_uploaded_file(request,problem_id):
 
 	
 	#To be transferred to another function
-	a = open(code.fil_e,"r")
-	b = open(code.compileoutp,"r")
-	c = open(code.runtimeoutp,"r")
-	return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code},context_instance=RequestContext(request))
 
-def gen():
-	complmess = []
-	fil = open(code.compileout.name, 'r+')
-	for chunk in fil:
-		complmess.append(chunk)
-	fil.close()
+def viewsubmission(request,obid):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	
+	code=get_object_or_404(CodeToCompile,id=obid)
+	if code.user!=request.user:
+		return HttpResponseRedirect("/onlinejudge")
+
+	if code.processed=='y':
+		a = open(code.fil_e,"r")
+		b = open(code.compileoutp,"r")
+		c = open(code.runtimeoutp,"r")
+		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code},context_instance=RequestContext(request))
+	else : 
+		return render_to_response('runn.html',{'obid':obid},context_instance=RequestContext(request))
 
 submission_message=''
 def upload_file(request,problem_id):
@@ -93,9 +113,11 @@ def upload_file(request,problem_id):
 		if fo.is_valid():
 			form = request.FILES
 #Problem object with problem id will be ensured during problem creation
-			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=Problem.objects.get(id=problem_id))
+			prob = get_object_or_404(Problem,id=problem_id)
+			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 			if created is True:
 				obj.compilemessage="Compiling..."
+				obj.runtimemessage="Not Run..."
 
 #Creating a file with the uploaded name
 				obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
@@ -109,8 +131,8 @@ def upload_file(request,problem_id):
 				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_runtimeroutput"
 
 #Relating to the problem
-				obj.problemid=Problem.objects.get(id=problem_id)
 				obj.status="In the queue" #This should be changed to Processing when it is processed
+				obj.processed="n"
 				obj.save()
 
 			else:
@@ -118,6 +140,10 @@ def upload_file(request,problem_id):
 #Deleting the previous file for this object and saving the new uploaded file
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
 				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.compilemessage="Compiling..."
+				obj.runtimemessage="Not Run..."
+				obj.processed="n"
+				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.save()
 				fil = open(obj.fil_e,"w+")
 				k = fo.cleaned_data["fil_e"].read()
@@ -130,44 +156,47 @@ def upload_file(request,problem_id):
 				fil = open(obj.runtimeoutp,"w+")
 				fil.close()
 
+			req=RequestQueue.objects.all()
+			if req.exists():	
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+							
+			else : 
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+			thread.start_new_thread(process_queue,())
+
+			obid=obj.id
 		else:
 			submission_message='Improper Upload ...'
 			return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
 	else:
 		submission_message='Improper Upload ...'
-		return HttpResponseRedirect("/onlinejudge/submissionpage"+str(problem_id))
+		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
 	
-	return HttpResponseRedirect("/onlinejudge/handle_uploaded_file/"+str(problem_id))
+	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
 def submissionpage(request,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
+	prob = get_object_or_404(Problem,id=problem_id)
 	form = UploadFileForm();
-	return render_to_response("submissionpage.html",{'form':form,'message':submission_message,'problem_id':problem_id,},context_instance=RequestContext(request))
+	return render_to_response("submissionpage.html",{'form':form,'message':submission_message,'problem_id':prob.id,},context_instance=RequestContext(request))
 
 def login(request):
 	if not request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
 	l=[]
 	if request.method=='POST':
-		print request.POST['user']
-		print request.POST['pass']
 		usernam=request.POST['user']
 		passwor=request.POST['pass']
 		user=authenticate(username=usernam, password=passwor)
-		print request.user
 		if user is not None:
 			auth.login(request,user)
-			print request.user
 			toreturn = {'string':"Logged in",}
 			return HttpResponseRedirect("/onlinejudge")
 		else:
 			toreturn = {'string':"Incorrect",}
 			return render_to_response("onlinejudgehome.html", toreturn, context_instance=RequestContext(request))
 	else:
-#		print request
-#		toreturn = {'string':'',}
-#		return render_to_response("onlinejudgehome.html", toreturn, context_instance=RequestContext(request))
 		return HttpResponseRedirect("/onlinejudge")
 
 def logout(request):
@@ -176,8 +205,6 @@ def logout(request):
 	return HttpResponseRedirect("/onlinejudge")
 
 def home(request):
-	#if request.user.is_anonymous():
-	#	return HttpResponseRedirect("/onlinejudge/login");
 	toreturn = {'string':"",}
 	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
 
