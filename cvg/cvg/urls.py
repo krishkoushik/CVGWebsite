@@ -1,4 +1,6 @@
 from django.conf.urls import patterns, include, url
+from django.conf.urls.defaults import *
+import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -15,6 +17,12 @@ urlpatterns = patterns('',
     url(r'^contact/$', 'website.views.contact', name='contact'),
     url(r'^projects/projectinfo/(?P<project_id>\d+)$', 'website.views.projectinfo', name='projectinfo'),
     
+    url(r'^weblog/', include('zinnia.urls')),
+    url(r'^comments/', include('django.contrib.comments.urls')),
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+	url(r'^admin/', include(admin.site.urls)),
+	url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
+	#url(r'^blog/', include('blog.urls')),  
     
     #Url for online judge portal
     url(r'^onlinejudge/$', 'onlinejudge.views.home', name='onlinejudgehome'),

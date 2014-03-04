@@ -10,7 +10,7 @@
                     <small></small>
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="{% url "home" %}">Home</a>
+                    <li><a href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="active">Projects</li>
                 </ol>
@@ -22,7 +22,7 @@
 
             <div class="col-md-7">
                 <a href="/projects/projectinfo/{{p.id}}">
-                    <img class="img-responsive" src="{{ p.main_imag }}">
+                    <img class="img-responsive" src="{{ p.main_imag.image.url }}">
                 </a>
             </div>
 			
