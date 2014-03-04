@@ -32,24 +32,24 @@
 .navbar-inverse .navbar-nav > .open > a, 
 .navbar-inverse .navbar-nav > .open > a:hover, 
 .navbar-inverse .navbar-nav > .open > a:focus {
-    color: #FFF;
+    color: #FF0;
     background-color: #900090;
 }
 /* caret */
 .navbar-inverse .navbar-nav > .dropdown > a .caret {
-    border-top-color: #777;
-    border-bottom-color: #777;
+    border-top-color: #FFF;
+    border-bottom-color: #FFF;
 }
 .navbar-inverse .navbar-nav > .dropdown > a:hover .caret,
 .navbar-inverse .navbar-nav > .dropdown > a:focus .caret {
-    border-top-color: #333;
-    border-bottom-color: #333;
+    border-top-color: #FF0;
+    border-bottom-color: #FF0;
 }
 .navbar-inverse .navbar-nav > .open > a .caret, 
 .navbar-inverse .navbar-nav > .open > a:hover .caret, 
 .navbar-inverse .navbar-nav > .open > a:focus .caret {
-    border-top-color: #555;
-    border-bottom-color: #555;
+    border-top-color: #FF0;
+    border-bottom-color: #FF0;
 }
 /* mobile version */
 .navbar-inverse .navbar-toggle {

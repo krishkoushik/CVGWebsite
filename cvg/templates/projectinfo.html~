@@ -74,7 +74,7 @@
             <div class="col-sm-3 col-xs-6">
                 <div class="col-sm-3 col-xs-6">
                <iframe width="420" height="345"
-		src="{{video.video}}">
+		src="http://www.youtube.com/watch?v=05AHPFPpHIM">
 				</iframe>
             </div>
             </div>
