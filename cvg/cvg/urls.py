@@ -24,7 +24,7 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/practice/$', 'onlinejudge.views.practice', name='practice'),
     url(r'^onlinejudge/submissionpage/(?P<problem_id>\d+)/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
     url(r'^onlinejudge/upload_file/(?P<problem_id>\d+)/$', 'onlinejudge.views.upload_file', name='upload_file'),
-    url(r'^onlinejudge/handle_uploaded_file/(?P<problem_id>\d+)/$', 'onlinejudge.views.handle_uploaded_file', name='viewsubmission'),
+    url(r'^onlinejudge/viewsubmission/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
     # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
