@@ -20,13 +20,13 @@
 		{% for p in projects %}
         <div class="row">
 
-            <div class="col-md-7">
+            <div class="col-md-3">
                 <a href="/projects/projectinfo/{{p.id}}">
                     <img class="img-responsive" src="{{ p.main_imag.image.url }}">
                 </a>
             </div>
 			
-            <div class="col-md-5">
+            <div class="col-md-9">
                 <h3>{{p.title}}</h3>
                
                 <p>{{p.brief}}</p>

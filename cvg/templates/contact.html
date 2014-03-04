@@ -1,5 +1,22 @@
 {% include "navbar.html" %}
-   
+       <style type="text/css">
+      #map-canvas { height: 250px;
+      width:100%; }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfBWveOVKMwk41olloFcHe4A6RiY_31aQ&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(12.99212, 80.23089),
+          zoom: 17
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
     <div class="container">
 
         <div class="row">
@@ -26,19 +43,18 @@
                     <li class="tooltip-social linkedin-link"><a href="#linkedin-profile" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="fa fa-linkedin-square fa-2x"></i></a>
                     </li>
                 </ul></div>
-<div class="col-lg-4">
-                <p>Computer Vision Group</p>
-                <p>Centre For Innovation</p>
-                <p>IIT Madras</p>
-                <p>Chennai - 600036</p>
+<div  class="col-lg-4">
+                <p id="add_1big"><strong>Computer Vision Group</strong></p>
+                <p id="add_1">Centre For Innovation</p>
+                <p id="add_1">IIT Madras</p>
+                <p id="add_1">Chennai - 600036</p>
                 
             </div>
 
-<div class="col-lg-4">
-                <p>This page features a page header, breadcrumbs, and the footer but that's it. Use this as a template for completely custom pages you wish to add to your site.</p>
-                <p>Be sure to read over and understand all of the Bootstrap 3 components at <a href="http://getbootstrap.com">http://getbootstrap.com</a> to get the most out of any Start Bootstrap template.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc placerat diam quis nisl vestibulum dignissim. In hac habitasse platea dictumst. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam placerat nunc ut tellus tristique, non posuere neque iaculis. Fusce aliquet dui ut felis rhoncus, vitae molestie mauris auctor. Donec pellentesque feugiat leo a adipiscing. Pellentesque quis tristique eros, sed rutrum mauris.</p>
-            </div>
+<div class="col-lg-4" onload="initialize()">
+                <div id="map-canvas"/>
+                
+                </div>
 
 
         </div>
@@ -53,7 +69,7 @@
         <footer>
             <div class="row">
                 <div class="col-lg-12">
-                    <p>Copyright &copy; Company 2013</p>
+                    <p>Copyright &copy; Computer Vision Group, IIT Madras</p>
                 </div>
             </div>
         </footer>

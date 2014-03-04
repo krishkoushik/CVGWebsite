@@ -19,14 +19,11 @@
 
         <div class="row">
 
-            <div class="col-md-8">
+            <div class="col-md-3">
                 <img class="img-responsive" src="{{project.main_imag}}">
             </div>
 
-            <div class="col-md-4">
-                <h3>Project Description</h3>
-                <p>{{project.brief}}</p>
-                <h3>Project Details</h3>
+            <div class="col-md-9">
                 <p> {{project.detail}}</p>
             </div>
 
@@ -40,7 +37,7 @@
 			{% for img in images %}
             <div class="col-sm-3 col-xs-6">
                 <a href="#">
-                    <img class="img-responsive img-customer" src="{{img.image}}">
+                    <img class="img-responsive img-customer" src="/media/{{img.image}}">
                 </a>
             </div>
             {% endfor %}

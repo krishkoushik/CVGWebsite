@@ -22,7 +22,7 @@
 
             <div class="col-md-7">
                 <a href="/projects/projectinfo/{{p.id}}">
-                    <img class="img-responsive" src="{{ p.main_imag.url }}">
+                    <img class="img-responsive" src="{{ p.main_imag.image.url }}">
                 </a>
             </div>
 			
