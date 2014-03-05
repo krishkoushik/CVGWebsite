@@ -30,7 +30,7 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/logout/$', 'onlinejudge.views.logout', name='onlinejudgelogout'),
     url(r'^onlinejudge/submissionpage/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
     url(r'^onlinejudge/upload_file/$', 'onlinejudge.views.upload_file', name='upload_file'),
-    url(r'^onlinejudge/handle_uploaded_file/$', 'onlinejudge.views.handle_uploaded_file', name='viewsubmission'),
+    url(r'^onlinejudge/submissionpage/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
     # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

@@ -11,7 +11,11 @@ class CodeToCompile(models.Model):
 	runtimeoutp = models.CharField(max_length=100)
 	compilemessage = models.CharField(max_length = 100)
 	runtimemessage = models.CharField(max_length = 100)
-
+	processed=models.CharField(max_length=1)
 
 class UploadFileForm(forms.Form):
 	fil_e  = forms.FileField()
+
+
+class RequestQueue(models.Model):
+	codetocompile=models.OneToOneField(CodeToCompile)
