@@ -1,0 +1,21 @@
+g++: error: media/code/1_mul.c: No such file or directory
+g++: error: /usr/local/lib/libopencv_calib3d.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_contrib.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_core.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_features2d.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_flann.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_gpu.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_highgui.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_imgproc.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_legacy.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_ml.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_nonfree.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_objdetect.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_photo.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_stitching.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_superres.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_ts.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_video.so: No such file or directory
+g++: error: /usr/local/lib/libopencv_videostab.so: No such file or directory
+g++: fatal error: no input files
+compilation terminated.

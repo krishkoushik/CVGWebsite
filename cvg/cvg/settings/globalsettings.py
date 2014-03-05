@@ -112,9 +112,9 @@ INSTALLED_APPS = (
     'website',
     'onlinejudge',
     'blog',
-    'tagging',
-    'mptt',
-    'zinnia',
+    #'tagging',
+    #'mptt',
+    #'zinnia',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
