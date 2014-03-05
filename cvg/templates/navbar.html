@@ -11,10 +11,13 @@
 
     <!-- Bootstrap core CSS -->
     <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
-
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,400italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <!-- Add custom CSS here -->
     <link href="{{ STATIC_URL }}css/modern-business.css" rel="stylesheet">
     <link href="{{ STATIC_URL }}font-awesome/css/font-awesome.min.css" rel="stylesheet">
+            <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
 </head>
 
 <body>
@@ -56,7 +59,7 @@
                             <li><a href="portfolio-4-col.html">4 Column Portfolio</a>
                             </li>
                             <li><a href="portfolio-item.html">Single Portfolio Item</a>
-                            </li>
+	                            </li>
                         </ul>
                     </li>-->                    
 					<li><a href="{% url "resources" %}">Resources</a>
@@ -72,9 +75,9 @@
                             </ul>
                     </li>
 
-					<li><a href="{% url "blog" %}">Blog</a>
+					<li><a href="{% url 'blog' %}">Blog</a>
                     </li>
-                    <li><a href="{% url "contact" %}">Contact</a>
+                    <li><a href="{% url 'contact' %}">Contact</a>
                     </li>
                     
                     <!--<li class="dropdown">

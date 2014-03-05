@@ -1,6 +1,19 @@
 # Django settings for cvg project.
 import os.path
 DEBUG = True
+TEMPLATE_CONTEXT_PROCESSORS = (
+	"django.contrib.auth.context_processors.auth",
+	"django.core.context_processors.debug",
+	"django.core.context_processors.i18n",
+	"django.core.context_processors.media",
+	"django.core.context_processors.static",
+	"django.core.context_processors.tz",
+	
+	'django.core.context_processors.request',
+	"django.contrib.messages.context_processors.messages",
+	'zinnia.context_processors.version',
+	#'django.contrib.comments',
+)
 TEMPLATE_DEBUG = DEBUG
 PWD = os.path.dirname(os.path.dirname(os.path.dirname(__file__ )))
 
@@ -95,9 +108,13 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'south',
     'website',
     'onlinejudge',
     'blog',
+    'tagging',
+    'mptt',
+    'zinnia',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
