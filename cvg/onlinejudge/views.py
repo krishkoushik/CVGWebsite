@@ -181,3 +181,5 @@ def home(request):
 	toreturn = {'string':"",}
 	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
 
+def editor(request):
+	return render_to_response("vim.html")

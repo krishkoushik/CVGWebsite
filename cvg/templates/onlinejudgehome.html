@@ -5,6 +5,7 @@
 			<h4>Welcome, {{request.user}}</h4>
 			<a href='/onlinejudge/logout/'>Logout</a>
 			<a href="/onlinejudge/submissionpage/">Submit</a>
+			<a href="/onlinejudge/editor/">Editor</a>
 		{% else %}
 			<div>
 				<form method="POST" action='/onlinejudge/login/'>
