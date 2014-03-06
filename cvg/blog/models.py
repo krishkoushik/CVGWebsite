@@ -11,7 +11,7 @@ class Post(models.Model):
     text = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User)
-
+    #comments =models.ManyToManyField(Comment,blank=True,null=True)
     def __unicode__(self):
         return self.title
 

@@ -5,7 +5,7 @@
         <div class="row">
 
             <div class="col-lg-12">
-                <h1 class="page-header">Blog Post
+                <h1 class="page-header">{{post.title}}
                     <small>A Sample Blog Post</small>
                 </h1>
                 <ol class="breadcrumb">
@@ -23,7 +23,7 @@
 
                 <!-- the actual blog post: title/author/date/content -->
                 <hr>
-                <p><i class="fa fa-clock-o"></i> Posted on August 24, 2013 at 9:00 PM by <a href="#">Start Boostrap</a>
+                <p><i class="fa fa-clock-o"></i> Posted on {{post.created_on}} by <a href="#">{{post.author}}</a>
                 </p>
                 <hr>
                 <img src="http://placehold.it/900x300" class="img-responsive">
@@ -141,11 +141,7 @@
     </div>
     <!-- /.container -->
 
-    <!-- JavaScript -->
-    <script src="js/jquery-1.10.2.js"></script>
-    <script src="js/bootstrap.js"></script>
-    <script src="js/modern-business.js"></script>
-
+    
 </body>
 
 </html>

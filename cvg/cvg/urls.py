@@ -12,17 +12,20 @@ urlpatterns = patterns('',
     url(r'^about/$', 'website.views.about', name='about'),
     url(r'^projects/$', 'website.views.projects', name='projects'),
     url(r'^resources/$', 'website.views.resources', name='resources'),
-    url(r'^blog/$', 'website.views.blog', name='blog'),
-    url(r'^blog/blog-post$', 'website.views.blogpost', name='blogpost'),
     url(r'^contact/$', 'website.views.contact', name='contact'),
     url(r'^projects/projectinfo/(?P<project_id>\d+)$', 'website.views.projectinfo', name='projectinfo'),
     
-    url(r'^weblog/', include('zinnia.urls')),
-    url(r'^comments/', include('django.contrib.comments.urls')),
-    url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
-	url(r'^admin/', include(admin.site.urls)),
+    #url(r'^weblog/', include('zinnia.urls')),
+    #url(r'^comments/', include('django.contrib.comments.urls')),
+    #url(r'^accounts/login/$', 'django.contrib.auth.views.login'),
+	#url(r'^admin/', include(admin.site.urls)),
 	url(r'^media/(?P<path>.*)$','django.views.static.serve',{'document_root':settings.MEDIA_ROOT}),
-	#url(r'^blog/', include('blog.urls')),  
+	#url(r'^blog/', include('blog.urls')), 
+	
+	url(r'^blog/$', 'blog.views.blog', name='blog'),
+    url(r'^blog/blogpost/^(?P<slug>[-\w\d]+)/$', 'blog.views.blogpost', name='blogpost'),
+    url(r'^blog/blogpost/(?P<slug>[-\w]+)$', 'blog.views.blogpost', name='blogpost'), 
+    
     
     #Url for online judge portal
     url(r'^onlinejudge/$', 'onlinejudge.views.home', name='onlinejudgehome'),

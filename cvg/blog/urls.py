@@ -4,7 +4,8 @@ from django.conf.urls.defaults import *
 
 from models import Post
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+	url(r'^post/(?P<slug>[-\w]+)$','blog.views.view_post',name='blog_post_detail')
 
 )
 '''
