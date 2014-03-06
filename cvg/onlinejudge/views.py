@@ -77,6 +77,8 @@ def handle_uploaded_file(obid):
 	
 	#To be transferred to another function
 
+
+
 def viewsubmission(request,obid):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
@@ -143,6 +145,57 @@ def upload_file(request):
 		return HttpResponseRedirect("/onlinejudge/submissionpage")
 	
 	return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(obid))
+
+def handle_editor(request):
+
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge");
+	l=[]
+	submission_message=''
+	#fo = UploadFileForm(request.POST,request.FILES)
+	if request.method == 'POST':
+		f=open("media/code/"str(obj.user.id)+"_","w+")
+		k = request.POST['code']
+		f.write(k)
+		obj,created = CodeToCompile.objects.get_or_create(user=request.user)
+		if created is True:
+			obj.compilemessage="Compiling..."
+			obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
+			obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
+			obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
+			obj.processed="n"
+			obj.save()
+		else:
+				subprocess.call(["rm","-f",obj.fil_e],shell=False)
+				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.processed="n"
+				obj.save()
+				fil = open(obj.fil_e,"w+")
+				k = fo.cleaned_data["fil_e"].read()
+				fil.write(k)
+				fil.close()
+				fil = open(obj.compileoutp,"w+")
+				fil.close()
+				fil = open(obj.runtimeoutp,"w+")
+				fil.close()
+			
+			req=RequestQueue.objects.all()
+			if req.exists():	
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+							
+			else : 
+				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+				thread.start_new_thread(process_queue,())
+	
+			print "inserted"
+			obid=obj.id
+		else:
+			submission_message='Improper Upload ...'
+			return HttpResponseRedirect("/onlinejudge/submissionpage")
+	else:
+		submission_message='Improper Upload ...'
+		return HttpResponseRedirect("/onlinejudge/submissionpage")
+	
 
 def submissionpage(request):
 	if request.user.is_anonymous():

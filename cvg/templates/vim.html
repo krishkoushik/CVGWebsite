@@ -21,9 +21,11 @@
 
 <article>
 
-<form action="" method="POST">
-<textarea id="code" name="code">
-</textarea>
+<form action="/onlinejudge/editor/submit" method="POST">
+	{% csrf_token %}
+	<textarea id="code" name="code">
+	</textarea>
+	<button type="submit" class="btn btn-default">Submit</button>
 </form>
 
 
