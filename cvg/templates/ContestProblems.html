@@ -1,0 +1,11 @@
+
+	{% include "navbar.html" %}
+	<h2>{{cont.name}}</h2>
+{% for i in problems %}
+<div>
+	<a href="/onlinejudge/submissionpage/{{i.id}}"> Problem {{i.id}}</a>
+</div>
+{% endfor %}
+	</body>
+	</html>
+

@@ -30,10 +30,14 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/logout/$', 'onlinejudge.views.logout', name='onlinejudgelogout'),
     url(r'^onlinejudge/editor/$', 'onlinejudge.views.editor', name='editor'),
     url(r'^onlinejudge/editor/submit/$', 'onlinejudge.views.handle_editor', name='handle_editor'),
-    url(r'^onlinejudge/submissionpage/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
-    url(r'^onlinejudge/upload_file/$', 'onlinejudge.views.upload_file', name='upload_file'),
-    url(r'^onlinejudge/submissionpage/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
-    # url(r'^cvg/', include('cvg.foo.urls')),
+    url(r'^onlinejudge/challenges/(?P<contest_id>\d+)/$', 'onlinejudge.views.challenges', name='challenges'),
+    url(r'^onlinejudge/practice/$', 'onlinejudge.views.practice', name='practice'),
+    url(r'^onlinejudge/submissionpage/(?P<problem_id>\d+)/$', 'onlinejudge.views.submissionpage', name='submissionpage'),
+    url(r'^onlinejudge/upload_file/(?P<problem_id>\d+)/$', 'onlinejudge.views.upload_file', name='upload_file'),
+    url(r'^onlinejudge/viewsubmission/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
+    url(r'^onlinejudge/contest/(?P<contest_id>\d+)/$', 'onlinejudge.views.contest', name='contest'),
+
+   # url(r'^cvg/', include('cvg.foo.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

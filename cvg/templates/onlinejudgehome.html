@@ -3,9 +3,14 @@
 		{{string}}
 		{% if not user.is_anonymous %}
 			<h4>Welcome, {{request.user}}</h4>
+			<h2><a href="/onlinejudge/challenges/{{curr_contest}}">Challenges</a></h2>
+			<h2><a href="/onlinejudge/practice/">Practice</a></h2>
 			<a href='/onlinejudge/logout/'>Logout</a>
+<<<<<<< HEAD
 			<a href="/onlinejudge/submissionpage/">Submit</a>
 			<a href="/onlinejudge/editor/">Editor</a>
+=======
+>>>>>>> 33c24af23a24279ba9e236219dbcf01a02ca92d4
 		{% else %}
 			<div>
 				<form method="POST" action='/onlinejudge/login/'>
