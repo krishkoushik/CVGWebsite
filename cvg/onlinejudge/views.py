@@ -140,7 +140,8 @@ def upload_file(request,problem_id):
 #Relating to the problem
 				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.processed="n"
-				obj.save()
+				obj.save()	
+
 
 			else:
 
@@ -178,11 +179,10 @@ def upload_file(request,problem_id):
 	else:
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
-	
+	i
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
-<<<<<<< HEAD
-def handle_editor(request):
+def handle_editor(request,problem_id):
 
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
@@ -190,53 +190,50 @@ def handle_editor(request):
 	submission_message=''
 	#fo = UploadFileForm(request.POST,request.FILES)
 	if request.method == 'POST':
-		f=open("media/code/"str(obj.user.id)+"_","w+")
-		k = request.POST['code']
-		f.write(k)
-		obj,created = CodeToCompile.objects.get_or_create(user=request.user)
+		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=problem_id)
 		if created is True:
-			obj.compilemessage="Compiling..."
-			obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
+			
+			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			k = request.POST['code']
+			f.write(k)
+                        obj.compilemessage="Compiling..."
+			obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"			
 			obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
 			obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
 			obj.processed="n"
 			obj.save()
 		else:
-				subprocess.call(["rm","-f",obj.fil_e],shell=False)
-				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(fo.cleaned_data["fil_e"].name)
-				obj.processed="n"
-				obj.save()
-				fil = open(obj.fil_e,"w+")
-				k = fo.cleaned_data["fil_e"].read()
-				fil.write(k)
-				fil.close()
-				fil = open(obj.compileoutp,"w+")
-				fil.close()
-				fil = open(obj.runtimeoutp,"w+")
-				fil.close()
+			subprocess.call(["rm","-f",obj.fil_e],shell=False)
 			
-			req=RequestQueue.objects.all()
-			if req.exists():	
-				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			k = request.POST['code']
+			f.write(k)
+			obj.fil_e ="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"	
+			obj.processed="n"
+			obj.save()
+			fil = open(obj.compileoutp,"w+")
+			fil.close()
+			fil = open(obj.runtimeoutp,"w+")
+			fil.close()
+			
+		req=RequestQueue.objects.all()
+		if req.exists():	
+			q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
 							
-			else : 
-				q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
-				thread.start_new_thread(process_queue,())
+		else : 
+			q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+			thread.start_new_thread(process_queue,())
 	
-			print "inserted"
-			obid=obj.id
-		else:
-			submission_message='Improper Upload ...'
-			return HttpResponseRedirect("/onlinejudge/submissionpage")
+		print "inserted"
+		obid=obj.id
 	else:
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage")
+	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
+
 	
 
-def submissionpage(request):
-=======
 def submissionpage(request,problem_id):
->>>>>>> 33c24af23a24279ba9e236219dbcf01a02ca92d4
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
 	prob = get_object_or_404(Problem,id=problem_id)
@@ -270,5 +267,5 @@ def home(request):
 	toreturn = {'string':"",'curr_contest':CurrentContest.objects.get(id=1).contest.id}
 	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
 
-def editor(request):
-	return render_to_response("vim.html")
+def editor(request,problem_id):
+	return render_to_response("vim.html",{'problem_id':problem_id},context_instance=RequestContext(request))

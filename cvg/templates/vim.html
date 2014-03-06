@@ -17,11 +17,11 @@
 <style type="text/css">
       .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
 </style>
-
+<div>
 
 <article>
 
-<form action="/onlinejudge/editor/submit" method="POST">
+<form action="/onlinejudge/editor/submit/{{problem_id}}/" method="POST">
 	{% csrf_token %}
 	<textarea id="code" name="code">
 	</textarea>
@@ -47,3 +47,4 @@
     </script>
 
   </article>
+</div>
