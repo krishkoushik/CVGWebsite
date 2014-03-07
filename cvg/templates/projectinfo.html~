@@ -23,9 +23,11 @@
                 <img class="img-responsive" src="{{project.main_imag}}">
             </div>
 
-            <div class="col-md-9">
-                <p> {{project.detail}}</p>
-            </div>
+           <div class="col-md-9"> 
+           			{% autoescape off %}
+                 {{project.detail}}
+                 {% endautoescape %}
+            </div>  
 
         </div>
 
@@ -78,23 +80,7 @@
             {% endfor %}
             </div>
          
-    <!-- /.container -->
-
-    <div class="container">
-
-        <hr>
-
-        <footer>
-            <div class="row">
-                <div class="col-lg-12">
-                    <p>Copyright &copy; Company 2013</p>
-                </div>
-            </div>
-        </footer>
-
-    </div>
-    <!-- /.container -->
-
+   {% include "copyrightcontainer.html" %}
     
 </body>
 

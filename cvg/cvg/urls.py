@@ -29,6 +29,9 @@ urlpatterns = patterns('',
     url(r'^blog/search/$', 'blog.views.search', name='blogsearch'),
     
     
+    
+    url(r'^ckeditor/', include('ckeditor.urls')),
+    
     #Url for online judge portal
     url(r'^onlinejudge/$', 'onlinejudge.views.home', name='onlinejudgehome'),
     url(r'^onlinejudge/login/$', 'onlinejudge.views.login', name='onlinejudgelogin'),

@@ -1,0 +1,111 @@
+/* navbar */
+.navbar-inverse {
+     
+    background: -webkit-linear-gradient(#0070c0, #200020); /* For Safari 5.1 to 6.0 */
+background: -o-linear-gradient(#0070c0, #200020); /* For Opera 11.1 to 12.0 */
+background: -moz-linear-gradient(#0070c0, #200020); /* For Firefox 3.6 to 15 */
+background: linear-gradient(#0070c0, #200020); /* Standard syntax */
+    border-color: #200020;
+    border:2px;
+}
+/* title */
+.navbar-inverse .navbar-brand {
+    color: #FFF;
+    font-weight:700;
+    font-size:23px;
+    font-family:Ubuntu;
+}
+.navbar-inverse .navbar-brand:hover,
+.navbar-inverse .navbar-brand:focus {
+    color: #FF0;
+}
+/* link */
+.navbar-inverse .navbar-nav > li > a {
+    color: #FFF;
+    font-weight:bold;
+}
+.navbar-inverse .navbar-nav > li > a:hover,
+.navbar-inverse .navbar-nav > li > a:focus {
+    color: #FF0;
+}
+.navbar-inverse .navbar-nav > .active > a, 
+.navbar-inverse .navbar-nav > .active > a:hover, 
+.navbar-inverse .navbar-nav > .active > a:focus {
+    color: #FFF;
+    background-color: #900090;
+}
+.navbar-inverse .navbar-nav > .open > a, 
+.navbar-inverse .navbar-nav > .open > a:hover, 
+.navbar-inverse .navbar-nav > .open > a:focus {
+    color: #FF0;
+    background-color: #900090;
+}
+/* caret */
+.navbar-inverse .navbar-nav > .dropdown > a .caret {
+    border-top-color: #FFF;
+    border-bottom-color: #FFF;
+}
+.navbar-inverse .navbar-nav > .dropdown > a:hover .caret,
+.navbar-inverse .navbar-nav > .dropdown > a:focus .caret {
+    border-top-color: #FF0;
+    border-bottom-color: #FF0;
+}
+.navbar-inverse .navbar-nav > .open > a .caret, 
+.navbar-inverse .navbar-nav > .open > a:hover .caret, 
+.navbar-inverse .navbar-nav > .open > a:focus .caret {
+    border-top-color: #FF0;
+    border-bottom-color: #FF0;
+}
+/* mobile version */
+.navbar-inverse .navbar-toggle {
+    border-color: #DDD;
+}
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus {
+    background-color: #DDD;
+}
+.navbar-inverse .navbar-toggle .icon-bar {
+    background-color: #CCC;
+}
+@media (max-width: 767px) {
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a {
+        color: #777;
+    }
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:hover,
+    .navbar-inverse .navbar-nav .open .dropdown-menu > li > a:focus {
+        color: #333;
+    }
+}
+.page-header{
+
+font-family: 'Open Sans', sans-serif;
+
+color:#0070c0;
+}
+p {
+font-family: 'Open Sans', sans-serif;
+font-weight:400;
+  color:#606060;
+  margin: 0 0 10px;
+}
+h2,h3{
+font-family: 'Open Sans', sans-serif;
+
+color:#0070c0;
+}
+#add_1
+{
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+#add_1big
+{
+	font-size:16px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+#img_about{
+position:relative;
+top:25px;
+
+}
