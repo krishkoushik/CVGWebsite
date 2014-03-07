@@ -1,0 +1,15 @@
+
+	{% include "navbar.html" %}
+
+	<div>
+	<a href="Editor.html">Editor</a>
+	</div>
+	<h2>Previous Contests</h2>
+{% for i in contests %}
+<div>
+	<a href="/onlinejudge/contest/{{i.id}}"> {{i.name}}</a>
+</div>
+{% endfor %}
+	</body>
+	</html>
+

@@ -15,10 +15,8 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">
-                <div class="fill" style="background-image:url('http://placehold.it/1900x1080&text=Slide One');"></div>
-                <div class="carousel-caption">
-                    <h1>Modern Business - A Bootstrap 3 Template</h1>
-                </div>
+                <div class="fill" style="background-image:url('/media/images/resize1CVG.jpg');background-size:70% 120%;"></div>
+                
             </div>
             <div class="item">
                 <div class="fill" style="background-image:url('/media/images/AR.jpg');"></div>
@@ -26,10 +24,6 @@
             </div>
             <div class="item">
                 <div class="fill" style="background-image:url('/media/images/mohan.jpg');"></div>
-                <div class="carousel-caption">
-                    <h1>Additional Layout Options at <a href="http://startbootstrap.com">http://startbootstrap.com</a>
-                    </h1>
- 3 3333                </div>
             </div>
         </div>
 
