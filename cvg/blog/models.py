@@ -4,9 +4,16 @@ from django.template.defaultfilters import slugify
 from django.contrib.auth.models import User
 
 # Create your models here.
+"""class Photo(models.Model):
+	title=models.CharField(max_length=100,blank=True)
+	image=models.ImageField(upload_to='blog', null=True)
+	
+	def __unicode__(self):
+		return self.image.url"""
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
+    #image=models.ForeignKey(Photo,blank=True,null=True)
     slug = models.SlugField(unique=True)
     text = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)

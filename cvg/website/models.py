@@ -3,7 +3,7 @@ from django.db import models
 # Create your models here.
 class Photo(models.Model):
 	title=models.CharField(max_length=100,blank=True)
-	image=models.ImageField(upload_to='media/projects')
+	image=models.ImageField(upload_to='blog')
 	
 	def __unicode__(self):
 		return self.image.url
