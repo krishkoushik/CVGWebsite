@@ -6,12 +6,12 @@
 
             <div class="col-lg-12">
                 <h1 class="page-header">{{post.title}}
-                    <small>A Sample Blog Post</small>
+                    
                 </h1>
                 <ol class="breadcrumb">
                     <li><a href="index.html">Home</a>
                     </li>
-                    <li class="active">Blog Post</li>
+                    <li class="active">{{post.title}}</li>
                 </ol>
             </div>
 
@@ -30,41 +30,36 @@
                 <hr>
                 <p class="lead">{{post.text}}</strong>
                 </p>
-                <ul>
-                    <li><a href="http://spaceipsum.com/">Space Ipsum</a>
-                    </li>
-                    <li><a href="http://cupcakeipsum.com/">Cupcake Ipsum</a>
-                    </li>
-                    <li><a href="http://tunaipsum.com/">Tuna Ipsum</a>
-                    </li>
-                </ul>
+                
 
                 <hr>
 
                 <!-- the comment box -->
                 <div class="well">
                     <h4>Leave a Comment:</h4>
-                    <form role="form">
-                        <div class="form-group">
-                            <textarea class="form-control" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </form>
+                    <form action="" method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+    </table>
+    <input type="submit" class="btn btn-primary" name="submit" value="Submit" />
+</form>
+                    
                 </div>
 
                 <hr>
 
                 <!-- the comments -->
-                <h3>Start Bootstrap
-                    <small>9:41 PM on August 24, 2013</small>
+                {% if post.comment_set.all %}
+                <h2>Comments</h2>
+                {% for comment in post.comment_set.all %}
+                <h3>{{ comment.name }}
+                    <small>{{ comment.created_on }}</small>
                 </h3>
-                <p>This has to be the worst blog post I have ever read. It simply makes no sense. You start off by talking about space or something, then you randomly start babbling about cupcakes, and you end off with random fish names.</p>
+                <p>{{ comment.text }}</p>
 
-                <h3>Start Bootstrap
-                    <small>9:47 PM on August 24, 2013</small>
-                </h3>
-                <p>Don't listen to this guy, any blog with the categories 'dinosaurs, spaceships, fried foods, wild animals, alien abductions, business casual, robots, and fireworks' has true potential.</p>
-
+               	{% endfor %}
+               	{% endif %}
             </div>
 
             <div class="col-lg-4">

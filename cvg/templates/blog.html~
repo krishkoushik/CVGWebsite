@@ -35,16 +35,21 @@
                 </a>
                 <hr>
                 <p>{{post.slug}}This is a very basic starter template for a blog homepage. It makes use of Font Awesome icons that are built into the 'Modern Business' template, and it makes use of the Bootstrap 3 pager at the bottom of the page.</p>
-                <a class="btn btn-primary" href=" href="/blog/blogpost/{{post.slug}}">Read More <i class="fa fa-angle-right"></i></a>
+                <a class="btn btn-primary"  href="/blog/blogpost/{{post.slug}}">Read More <i class="fa fa-angle-right"></i></a>
 
                 <hr>
 				{% endfor %}
                 
                 <ul class="pager">
-                    <li class="previous"><a href="#">&larr; Older</a>
+                 {% if posts.has_next %} 
+                    <li class="previous"><a href="?page={{ posts.next_page_number }}">&larr; Older</a>
                     </li>
-                    <li class="next"><a href="#">Newer &rarr;</a>
+                    {% endif %}
+                    
+                  {% if posts.has_previous %} 
+                    <li class="next"><a href="?page={{ posts.previous_page_number }}">Newer &rarr;</a>
                     </li>
+                  {% endif %}   
                 </ul>
 
             </div>
