@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'Photo'
         db.create_table(u'website_photo', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('title', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('image', self.gf('django.db.models.fields.files.ImageField')(max_length=100)),
         ))
         db.send_create_signal(u'website', ['Photo'])
@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
         # Adding model 'Video'
         db.create_table(u'website_video', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, null=True, blank=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100, blank=True)),
             ('video', self.gf('django.db.models.fields.URLField')(max_length=200)),
         ))
         db.send_create_signal(u'website', ['Video'])
@@ -76,7 +76,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Photo'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'image': ('django.db.models.fields.files.ImageField', [], {'max_length': '100'}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+            'title': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'})
         },
         u'website.project': {
             'Meta': {'object_name': 'Project'},
@@ -92,7 +92,7 @@ class Migration(SchemaMigration):
         u'website.video': {
             'Meta': {'object_name': 'Video'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'null': 'True', 'blank': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100', 'blank': 'True'}),
             'video': ('django.db.models.fields.URLField', [], {'max_length': '200'})
         }
     }

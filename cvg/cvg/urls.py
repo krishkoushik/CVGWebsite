@@ -25,7 +25,8 @@ urlpatterns = patterns('',
 	
 	url(r'^blog/$', 'blog.views.blog', name='blog'),
     url(r'^blog/blogpost/^(?P<slug>[-\w\d]+)/$', 'blog.views.blogpost', name='blogpost'),
-    url(r'^blog/blogpost/(?P<slug>[-\w]+)$', 'blog.views.blogpost', name='blogpost'), 
+    url(r'^blog/blogpost/(?P<slug>[-\w]+)$', 'blog.views.blogpost', name='blogpost'),
+    url(r'^blog/search/$', 'blog.views.search', name='blogsearch'),
     
     
     #Url for online judge portal

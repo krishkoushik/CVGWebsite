@@ -190,7 +190,8 @@ def handle_editor(request,problem_id):
 	submission_message=''
 	#fo = UploadFileForm(request.POST,request.FILES)
 	if request.method == 'POST':
-		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=problem_id)
+		prob = get_object_or_404(Problem,id=problem_id)
+		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 		if created is True:
 			
 			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")

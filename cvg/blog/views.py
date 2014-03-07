@@ -10,6 +10,13 @@ from django.shortcuts import render
 
 #@user_passes_test(lambda u: u.is_superuser)
 
+def search(request):
+	if 'searchbox' in request.GET and request.GET['searchbox']:
+		query=request.GET['searchbox']
+		posts=Post.objects.filter(title__icontains=query)
+		
+		return render(request, 'blog.html',{'posts': posts,})
+	
 def blog(request):
 	post_list=Post.objects.all().order_by("-created_on")
 	paginator = Paginator(post_list, 1) # Show 25 contacts per page
