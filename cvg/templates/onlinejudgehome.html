@@ -1,15 +1,12 @@
 {% include "navbar.html" %}
-
+		<div id="ojhome">
 		{{string}}
-		{% if not user.is_anonymous %}
-			<h4>Welcome, {{request.user}}</h4>
-			<h2><a href="/onlinejudge/challenges/{{curr_contest}}">Challenges</a></h2>
-			<h2><a href="/onlinejudge/practice/">Practice</a></h2>
-			<a href='/onlinejudge/logout/'>Logout</a>
-			<a href="/onlinejudge/submissionpage/">Submit</a>
-				
-
-		{% else %}
+	{% if not user.is_anonymous %}
+			<h4 id="welcum">Welcome, {{request.user}}</h4>
+			<div id="challenge_box"><div id="challenge_text" ><a id="challenge_text1"href="/onlinejudge/challenges/{{curr_contest}}">Challenges</a></div></div>
+			<div id="practice_box"><div id="practice_text"><a id="practice_text1" href="/onlinejudge/practice/">Practice</a></div></div>
+			<a id="logout" href='/onlinejudge/logout/'><img src="{{ STATIC_URL }}images/logout-icon.png" ></a>
+	{% else %}
 			<div>
 				<form method="POST" action='/onlinejudge/login/'>
 					{% csrf_token %}
@@ -25,5 +22,6 @@
 				</form>	
 			</div>
 		{% endif %}
+		</div>
 	</body>
 </html>

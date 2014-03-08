@@ -26,7 +26,7 @@ class Migration(SchemaMigration):
         db.create_table(u'onlinejudge_problem', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('statement', self.gf('django.db.models.fields.CharField')(max_length=2000)),
+            ('statement', self.gf('ckeditor.fields.RichTextField')()),
             ('compile_line', self.gf('django.db.models.fields.CharField')(max_length=300)),
             ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
         ))
@@ -138,7 +138,7 @@ class Migration(SchemaMigration):
             'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'statement': ('django.db.models.fields.CharField', [], {'max_length': '2000'})
+            'statement': ('ckeditor.fields.RichTextField', [], {})
         },
         u'onlinejudge.requestqueue': {
             'Meta': {'object_name': 'RequestQueue'},

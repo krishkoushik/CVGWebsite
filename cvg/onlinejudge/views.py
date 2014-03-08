@@ -12,17 +12,25 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 def contest(request,contest_id):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("ContestProblems.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
 def challenges(request,contest_id):
-#Add login if the user needs to be logged in for viewing the challenges
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
 def practice(request):
-#Add login if the user needs to be logged in for viewing the challenges
-	contests = Contest.objects.filter(~Q(id=CurrentContest.objects.get(id=1).contest.id))
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	l=[]
+	for con in Contest.objects.all():
+		if con.id!=1 :
+			l.append(con);
+	contests = l
 	return render_to_response("practice.html",{'contests':contests,},context_instance=RequestContext(request))
 
 def process_queue():
@@ -265,8 +273,14 @@ def logout(request):
 	return HttpResponseRedirect("/onlinejudge")
 
 def home(request):
-	toreturn = {'string':"",'curr_contest':CurrentContest.objects.get(id=1).contest.id}
-	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
+	for con in CurrentContest.objects.all():
+		if con.id==1 :	
+			toretur = {'string':"",'curr_contest':con.contest.id}#to be extended for more contests
+			return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
+	toretur = {'string':"No Current Contests",'curr_contest':1}
+	return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
 
 def editor(request,problem_id):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
 	return render_to_response("vim.html",{'problem_id':problem_id},context_instance=RequestContext(request))

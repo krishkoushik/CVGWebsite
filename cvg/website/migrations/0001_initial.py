@@ -29,7 +29,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('brief', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('detail', self.gf('django.db.models.fields.CharField')(max_length=1000)),
+            ('detail', self.gf('ckeditor.fields.RichTextField')()),
             ('main_imag', self.gf('django.db.models.fields.related.ForeignKey')(related_name='main', to=orm['website.Photo'])),
             ('date', self.gf('django.db.models.fields.DateField')()),
         ))
@@ -82,7 +82,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Project'},
             'brief': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
             'date': ('django.db.models.fields.DateField', [], {}),
-            'detail': ('django.db.models.fields.CharField', [], {'max_length': '1000'}),
+            'detail': ('ckeditor.fields.RichTextField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'imag': ('django.db.models.fields.related.ManyToManyField', [], {'blank': 'True', 'related_name': "'aux'", 'null': 'True', 'symmetrical': 'False', 'to': u"orm['website.Photo']"}),
             'main_imag': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'main'", 'to': u"orm['website.Photo']"}),

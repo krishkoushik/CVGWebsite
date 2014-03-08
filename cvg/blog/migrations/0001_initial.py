@@ -13,7 +13,8 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=50)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
+            ('brief', self.gf('django.db.models.fields.TextField')()),
+            ('text', self.gf('ckeditor.fields.RichTextField')()),
             ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
         ))
@@ -25,7 +26,7 @@ class Migration(SchemaMigration):
             ('name', self.gf('django.db.models.fields.CharField')(max_length=42)),
             ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
             ('website', self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True)),
-            ('text', self.gf('django.db.models.fields.TextField')()),
+            ('text', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
             ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['blog.Post'])),
             ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
         ))
@@ -77,16 +78,17 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
             'post': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['blog.Post']"}),
-            'text': ('django.db.models.fields.TextField', [], {}),
+            'text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'})
         },
         u'blog.post': {
             'Meta': {'object_name': 'Post'},
             'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
+            'brief': ('django.db.models.fields.TextField', [], {}),
             'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'}),
-            'text': ('django.db.models.fields.TextField', [], {}),
+            'text': ('ckeditor.fields.RichTextField', [], {}),
             'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
         },
         u'contenttypes.contenttype': {
