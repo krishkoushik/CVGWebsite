@@ -11,13 +11,13 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	
 	'django.core.context_processors.request',
 	"django.contrib.messages.context_processors.messages",
-	'zinnia.context_processors.version',
+	#'zinnia.context_processors.version',
 	#'django.contrib.comments',
 )
 TEMPLATE_DEBUG = DEBUG
 PWD = os.path.dirname(os.path.dirname(os.path.dirname(__file__ )))
 
-
+CKEDITOR_UPLOAD_PATH = os.path.join(PWD, "media/ckeditor_uploads")
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
@@ -101,6 +101,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
 )
 
+
 INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -108,10 +109,11 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'south',
+    'south',
     'website',
     'onlinejudge',
     'blog',
+    'ckeditor',
     #'tagging',
     #'mptt',
     #'zinnia',

@@ -16,7 +16,7 @@ def about(request):
 def projects(request):
 
 	project_list=Project.objects.all()
-	paginator = Paginator(project_list, 2) # Show 25 contacts per page
+	paginator = Paginator(project_list, 1) # Show 25 contacts per page
 	page = request.GET.get('page')
 	try:
 		projects = paginator.page(page)

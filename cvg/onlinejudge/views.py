@@ -12,17 +12,25 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 
 def contest(request,contest_id):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("ContestProblems.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
 def challenges(request,contest_id):
-#Add login if the user needs to be logged in for viewing the challenges
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
 def practice(request):
-#Add login if the user needs to be logged in for viewing the challenges
-	contests = Contest.objects.filter(~Q(id=CurrentContest.objects.get(id=1).contest.id))
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	l=[]
+	for con in Contest.objects.all():
+		if con.id!=1 :
+			l.append(con);
+	contests = l
 	return render_to_response("practice.html",{'contests':contests,},context_instance=RequestContext(request))
 
 def process_queue():
@@ -91,6 +99,8 @@ def handle_uploaded_file(obid):
 	
 	#To be transferred to another function
 
+
+
 def viewsubmission(request,obid):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
@@ -138,7 +148,8 @@ def upload_file(request,problem_id):
 #Relating to the problem
 				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.processed="n"
-				obj.save()
+				obj.save()	
+
 
 			else:
 
@@ -176,8 +187,60 @@ def upload_file(request,problem_id):
 	else:
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
-	
+	i
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
+
+def handle_editor(request,problem_id):
+
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge");
+	l=[]
+	submission_message=''
+	#fo = UploadFileForm(request.POST,request.FILES)
+	if request.method == 'POST':
+		prob = get_object_or_404(Problem,id=problem_id)
+		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
+		if created is True:
+			
+			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			k = request.POST['code']
+			f.write(k)
+                        obj.compilemessage="Compiling..."
+			obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"			
+			obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
+			obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
+			obj.processed="n"
+			obj.save()
+		else:
+			subprocess.call(["rm","-f",obj.fil_e],shell=False)
+			
+			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			k = request.POST['code']
+			f.write(k)
+			obj.fil_e ="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"	
+			obj.processed="n"
+			obj.save()
+			fil = open(obj.compileoutp,"w+")
+			fil.close()
+			fil = open(obj.runtimeoutp,"w+")
+			fil.close()
+			
+		req=RequestQueue.objects.all()
+		if req.exists():	
+			q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+							
+		else : 
+			q,created=RequestQueue.objects.get_or_create(codetocompile=obj)
+			thread.start_new_thread(process_queue,())
+	
+		print "inserted"
+		obid=obj.id
+	else:
+		submission_message='Improper Upload ...'
+		return HttpResponseRedirect("/onlinejudge/submissionpage")
+	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
+
+	
 
 def submissionpage(request,problem_id):
 	if request.user.is_anonymous():
@@ -210,6 +273,14 @@ def logout(request):
 	return HttpResponseRedirect("/onlinejudge")
 
 def home(request):
-	toreturn = {'string':"",'curr_contest':CurrentContest.objects.get(id=1).contest.id}
-	return render_to_response("onlinejudgehome.html",toreturn,context_instance=RequestContext(request))
+	for con in CurrentContest.objects.all():
+		if con.id==1 :	
+			toretur = {'string':"",'curr_contest':con.contest.id}#to be extended for more contests
+			return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
+	toretur = {'string':"No Current Contests",'curr_contest':1}
+	return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
 
+def editor(request,problem_id):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	return render_to_response("vim.html",{'problem_id':problem_id},context_instance=RequestContext(request))

@@ -1,0 +1,50 @@
+<!doctype html>
+
+{% include "navbar.html" %}
+
+<meta charset="utf-8"/>
+
+<link rel="stylesheet" href="/static/css/docs.css">
+
+<link rel="stylesheet" href="/static/css/codemirror.css">
+<link rel="stylesheet" href="/static/css/dialog.css">
+
+<script src="/static/js/codemirror.js"></script>
+<script src="/static/js/dialog.js"></script>
+<script src="/static/js/searchcursor.js"></script>
+<script src="/static/js/clike.js"></script>
+<script src="/static/js/vim.js"></script>
+<style type="text/css">
+      .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
+</style>
+<div>
+
+<article>
+
+<form action="/onlinejudge/editor/submit/{{problem_id}}/" method="POST">
+	{% csrf_token %}
+	<textarea id="code" name="code">
+	</textarea>
+	<button type="submit" class="btn btn-default">Submit</button>
+</form>
+
+
+
+    <script>
+      CodeMirror.commands.save = function(){ alert("Saving"); };
+      var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+        lineNumbers: true,
+        mode: "text/x-csrc",
+        vimMode: true,
+        showCursorWhenSelecting: true
+      });
+      var editor2 = CodeMirror.fromTextArea(document.getElementById("code2"), {
+        lineNumbers: true,
+        mode: "text/x-csrc",
+        vimMode: true,
+        showCursorWhenSelecting: true
+      });
+    </script>
+
+  </article>
+</div>

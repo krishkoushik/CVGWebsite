@@ -8,22 +8,68 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+        # Adding model 'Contest'
+        db.create_table(u'onlinejudge_contest', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+        ))
+        db.send_create_signal(u'onlinejudge', ['Contest'])
+
+        # Adding model 'CurrentContest'
+        db.create_table(u'onlinejudge_currentcontest', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
+        ))
+        db.send_create_signal(u'onlinejudge', ['CurrentContest'])
+
+        # Adding model 'Problem'
+        db.create_table(u'onlinejudge_problem', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('statement', self.gf('django.db.models.fields.CharField')(max_length=2000)),
+            ('compile_line', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
+        ))
+        db.send_create_signal(u'onlinejudge', ['Problem'])
+
         # Adding model 'CodeToCompile'
         db.create_table(u'onlinejudge_codetocompile', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['auth.User'], unique=True)),
+            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
             ('fil_e', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('compileoutp', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('runtimeoutp', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('compilemessage', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('runtimemessage', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('problemid', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Problem'])),
+            ('status', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('processed', self.gf('django.db.models.fields.CharField')(max_length=1)),
         ))
         db.send_create_signal(u'onlinejudge', ['CodeToCompile'])
 
+        # Adding model 'RequestQueue'
+        db.create_table(u'onlinejudge_requestqueue', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('codetocompile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['onlinejudge.CodeToCompile'], unique=True)),
+        ))
+        db.send_create_signal(u'onlinejudge', ['RequestQueue'])
+
 
     def backwards(self, orm):
+        # Deleting model 'Contest'
+        db.delete_table(u'onlinejudge_contest')
+
+        # Deleting model 'CurrentContest'
+        db.delete_table(u'onlinejudge_currentcontest')
+
+        # Deleting model 'Problem'
+        db.delete_table(u'onlinejudge_problem')
+
         # Deleting model 'CodeToCompile'
         db.delete_table(u'onlinejudge_codetocompile')
+
+        # Deleting model 'RequestQueue'
+        db.delete_table(u'onlinejudge_requestqueue')
 
 
     models = {
@@ -69,9 +115,35 @@ class Migration(SchemaMigration):
             'compileoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'fil_e': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'problemid': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Problem']"}),
+            'processed': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'runtimemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'runtimeoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'user': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['auth.User']", 'unique': 'True'})
+            'status': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'onlinejudge.contest': {
+            'Meta': {'object_name': 'Contest'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'onlinejudge.currentcontest': {
+            'Meta': {'object_name': 'CurrentContest'},
+            'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        u'onlinejudge.problem': {
+            'Meta': {'object_name': 'Problem'},
+            'compile_line': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'statement': ('django.db.models.fields.CharField', [], {'max_length': '2000'})
+        },
+        u'onlinejudge.requestqueue': {
+            'Meta': {'object_name': 'RequestQueue'},
+            'codetocompile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['onlinejudge.CodeToCompile']", 'unique': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
 
