@@ -31,7 +31,7 @@ def projects(request):
 	#return render_to_response("projects.html",context_instance=RequestContext(request))
 	
 def resources(request):
-	return render_to_response("resources.html",context_instance=RequestContext(request))
+	return render_to_response("resourcestemp.html",context_instance=RequestContext(request))
 	
 def blog(request):
 	return render_to_response("blog.html",context_instance=RequestContext(request))

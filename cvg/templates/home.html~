@@ -15,7 +15,7 @@
         <!-- Wrapper for slides -->
         <div class="carousel-inner">
             <div class="item active">
-                <div class="fill" style="background-image:url('/media/images/resize1CVG.jpg');background-size:70% 120%;"></div>
+                <div class="fill" style="background-image:url('/media/images/resize1CVG.jpg');"></div>
                 
             </div>
             <div class="item">
