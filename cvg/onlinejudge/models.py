@@ -2,7 +2,7 @@ from django.db import models
 from django import forms
 from django.core.files import File
 from django.contrib.auth.models import User
-
+from ckeditor.fields import RichTextField
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
 	def __str__(self):
@@ -15,7 +15,7 @@ class CurrentContest(models.Model):
 
 class Problem(models.Model):
 	name = models.CharField(max_length=100)
-	statement = models.CharField(max_length=2000)
+	statement = RichTextField()
 	compile_line = models.CharField(max_length=300)
 	contest = models.ForeignKey(Contest)
 	def __str__(self):

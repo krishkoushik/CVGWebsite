@@ -179,7 +179,7 @@ def upload_file(request,problem_id):
 	else:
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
-	i
+	
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
 def handle_editor(request,problem_id):

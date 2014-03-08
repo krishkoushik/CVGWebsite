@@ -9,7 +9,7 @@
                     
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="index.html">Home</a>
+                    <li><a href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="active">{{post.title}}</li>
                 </ol>
@@ -25,10 +25,8 @@
                 <hr>
                 <p><i class="fa fa-clock-o"></i> Posted on {{post.created_on}} by <a href="#">{{post.author}}</a>
                 </p>
-                <hr>
-                <img src="http://placehold.it/900x300" class="img-responsive">
-                <hr>
-                <p class="lead">{{post.text}}</strong>
+                
+                <p class="lead">{% autoescape off %}{{post.text}}{% endautoescape %}</strong>
                 </p>
                 
 
