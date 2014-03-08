@@ -15,6 +15,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     #image=models.ForeignKey(Photo,blank=True,null=True)
     slug = models.SlugField(unique=True)
+    brief=models.TextField()
     text = RichTextField()
     created_on = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User)
@@ -34,11 +35,13 @@ class Post(models.Model):
             self.slug = slugify(self.title)
         super(Post, self).save(*args, **kwargs)
 
+	
+
 class Comment(models.Model):
     name = models.CharField(max_length=42)
     email = models.EmailField(max_length=75)
     website = models.URLField(max_length=200, null=True, blank=True)
-    text = models.TextField()
+    text = models.TextField(null=True,blank=True)
     post = models.ForeignKey(Post)
     created_on = models.DateTimeField(auto_now_add=True)
 
