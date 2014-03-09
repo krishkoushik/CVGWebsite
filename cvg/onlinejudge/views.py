@@ -35,6 +35,7 @@ def practice(request):
 
 def process_queue():
 	
+	print "queue"
 	while True:
 		req=RequestQueue.objects.all()
 		if req.exists():
@@ -44,49 +45,56 @@ def process_queue():
 		else:
 			break
 
-
 def handle_uploaded_file(obid):
-		
+	
+	print "youoiu"	
 #Compiling code and storing the compile message in object
 	code = get_object_or_404(CodeToCompile,id=obid)
-	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
-	comp = open("compilemessage.txt","wb+")#creating a compile message file
+	dir_jail_name = "media/code/"+str(code.user.id)+"_"+str(code.problemid.id)+"/"	
+	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
+	comp = open(dir_jail_name+"compilemessage.txt","wb+")#creating a compile message file
 	out=subprocess.call(arg,stderr=comp,shell=False)
 	comp.close()
+	print dir_jail_name
+#return 
 	
 	#writing the compile file
-	fil = open("compilemessage.txt","r")
+	fil = open(dir_jail_name+"compilemessage.txt","r")
 	fi = open(str(code.compileoutp),"w")
 	fi.write(fil.read())
 	fil.close()
 	fi.close()
 	
+	print dir_jail_name+"hi"
+	#Creating the jail environment
+	subprocess.call(["bash","makejail.sh",dir_jail_name,],shell=False)
+
 	#Running code and storing runtime message
 	
-	runt = open("runtimemessage.txt","wb+")#creating a runtimemessage file
+	runt = open(dir_jail_name+"runtimemessage.txt","wb+")#creating a runtimemessage file
 	runt.close()
-	runt = open("mes.txt","wb+")#creating a memcheck message file
+	runt = open(dir_jail_name+"mes.txt","wb+")#creating a memcheck message file
 	runt.close()
 	if out==0 :
 		code.compilemessage = 'Successfully Compiled'
-		arg=shlex.split("./output")
-		runt = open("runtimemessage.txt","wb+")
+		arg=shlex.split("sudo python sandcode.py "+dir_jail_name)
+		runt = open(dir_jail_name+"runtimemessage.txt","wb+")
 		out1=subprocess.Popen(arg,stderr=runt,shell=False)
-		out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid)],shell=False);
+#out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid),dir_jail_name,],shell=False);
 		stdo,stder = out1.communicate()
-		stdo,stder = out2.communicate()
+#		stdo,stder = out2.communicate()
 		runt.close()
 	else :
 		code.compilemessage = "Compile Failed"
 	
 	#writing runtime message (error) to file pointed by object
-	fil = File(open("runtimemessage.txt","r"))
+	fil = File(open(dir_jail_name+"runtimemessage.txt","r"))
 	fi = open(code.runtimeoutp,"w")
 	fi.write(fil.read())
 	fil.close()
 	fi.close()
 
-	fil = File(open("mes.txt","r"))
+	fil = File(open(dir_jail_name+"mes.txt","r"))
 	code.runtimemessage = fil.readline()
 	fi.close()
 
@@ -94,7 +102,7 @@ def handle_uploaded_file(obid):
 	code.save()
 
 	#deleting the temporarily created files
-	subprocess.call(["rm","-f","compilemessage.txt","runtimemessage.txt","mes.txt","output"],shell=False)
+#subprocess.call(["rm","-f","compilemessage.txt","runtimemessage.txt","mes.txt","output"],shell=False)
 
 	
 	#To be transferred to another function
@@ -130,20 +138,26 @@ def upload_file(request,problem_id):
 #Problem object with problem id will be ensured during problem creation
 			prob = get_object_or_404(Problem,id=problem_id)
 			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
+			#Creating Jail directory
+
+			dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
+			subprocess.call(["rm","-rf",dir_jail_name],shell=False)
+			subprocess.call(["mkdir","-p",dir_jail_name])
+
 			if created is True:
 				obj.compilemessage="Compiling..."
 				obj.runtimemessage="Not Run..."
 
 #Creating a file with the uploaded name
-				obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.fil_e=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				fil = open(obj.fil_e,"w+")
 				k = fo.cleaned_data["fil_e"].read()
 				fil.write(k)
 				fil.close()
 
 #Creating files for compile and runtime output
-				obj.compileoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_compileroutput"
-				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_runtimeroutput"
+				obj.compileoutp=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_compileroutput"
+				obj.runtimeoutp=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_runtimeroutput"
 
 #Relating to the problem
 				obj.status="In the queue" #This should be changed to Processing when it is processed
@@ -155,7 +169,7 @@ def upload_file(request,problem_id):
 
 #Deleting the previous file for this object and saving the new uploaded file
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
-				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
+				obj.fil_e =dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				obj.compilemessage="Compiling..."
 				obj.runtimemessage="Not Run..."
 				obj.processed="n"
@@ -187,7 +201,6 @@ def upload_file(request,problem_id):
 	else:
 		submission_message='Improper Upload ...'
 		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
-	i
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
 def handle_editor(request,problem_id):
@@ -200,24 +213,28 @@ def handle_editor(request,problem_id):
 	if request.method == 'POST':
 		prob = get_object_or_404(Problem,id=problem_id)
 		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
+		#Creating the jail directory
+		dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
+		subprocess.call(["rm","-rf",dir_jail_name],shell=False)
+		subprocess.call(["mkdir","-p",dir_jail_name])
 		if created is True:
 			
-			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)
                         obj.compilemessage="Compiling..."
-			obj.fil_e="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"			
-			obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
-			obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
+			obj.fil_e=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"			
+			obj.compileoutp=dir_jail_name+str(obj.user.id)+"_compileroutput"
+			obj.runtimeoutp=dir_jail_name+str(obj.user.id)+"_runtimeroutput"
 			obj.processed="n"
 			obj.save()
 		else:
 			subprocess.call(["rm","-f",obj.fil_e],shell=False)
 			
-			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)
-			obj.fil_e ="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"	
+			obj.fil_e =dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"	
 			obj.processed="n"
 			obj.save()
 			fil = open(obj.compileoutp,"w+")

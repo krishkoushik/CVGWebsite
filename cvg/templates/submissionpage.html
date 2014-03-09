@@ -1,5 +1,34 @@
 {% include "navbar.html" %}
-
+<script>
+function get()
+{
+	alert("got");
+}
+function GetFileSize() {
+	window.location.reload();
+	fileid={{form.auto_id}}
+	 try {
+		  var fileSize = 0;
+		   //for IE
+		   if ($.browser.msie) {
+			    //before making an object of ActiveXObject, 
+			    //please make sure ActiveX is enabled in your IE browser
+			    var objFSO = new ActiveXObject("Scripting.FileSystemObject"); var filePath = $("#" + fileid)[0].value;
+				 var objFile = objFSO.getFile(filePath);
+				  var fileSize = objFile.size; //size in kb
+				   fileSize = fileSize / 1048576; //size in mb 
+				    }
+		    else {
+				 fileSize = $("#" + fileid)[0].files[0].size //size in kb
+					  fileSize = fileSize / 1048576; //size in mb 
+				  }
+			 alert("Uploaded File Size is" + fileSize + "MB");
+			  }
+	  catch (e) {
+		   alert("Error is :" + e);
+		    }
+}
+</script>
 		Hello, You are in the submission page, {{user}}
 		<br/>
 		<a href="/onlinejudge/logout/">Logout</a>
@@ -7,7 +36,7 @@
 		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{problem_id}}/' method='POST'>
 			{% csrf_token %}
 				{{form}}
-			<input type="submit" name="submit" value="Submit">
+			<input type="submit" id="btn_submit" name="submit" onclick="GetFileSize()" value="Submit">
 		</form>
 		<a href="/onlinejudge/editor/{{problem_id}}">Editor</a>
 	</body>
