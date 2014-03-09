@@ -34,6 +34,17 @@ $(document).ready(function(){
 
 	<div id="pushobj">
 	
+	{% autoescape off %}{{prob.statement}}{% endautoescape %}
+	
+	<br>
+		<a href="/onlinejudge/logout/">Logout</a>
+		<h4>{{message}}</h4>
+		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{prob.id}}/' method='POST'>
+			{% csrf_token %}
+				{{form}}
+			<input type="submit" name="submit" value="Submit">
+		</form>
+		<a href="/onlinejudge/editor/{{prob.id}}">Editor</a>
     </div>
         <div id="menu">
             <nav>

@@ -23,6 +23,18 @@ def challenges(request,contest_id):
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
 
+submission_message=''
+
+def contestproblem(request,contest_id,problem_id):
+	if request.user.is_anonymous():
+		return HttpResponseRedirect("/onlinejudge")
+	cont = get_object_or_404(Contest,id=contest_id)
+	prob = get_object_or_404(Problem,contest=cont,id=problem_id) 
+	form = UploadFileForm();
+	return render_to_response("display_prob.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob,'form':form,'message':submission_message},context_instance=RequestContext(request))
+	
+
+	
 def practice(request):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
@@ -117,7 +129,6 @@ def viewsubmission(request,obid):
 	else : 
 		return render_to_response('runn.html',{'obid':obid},context_instance=RequestContext(request))
 
-submission_message=''
 def upload_file(request,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge");
