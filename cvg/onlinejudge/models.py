@@ -3,6 +3,7 @@ from django import forms
 from django.core.files import File
 from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
+from formatChecker import RestrictedFileField
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
 	def __str__(self):
@@ -39,7 +40,7 @@ class CodeToCompile(models.Model):
 		self.accepted=0
 
 class UploadFileForm(forms.Form):
-	fil_e  = forms.FileField()
+	fil_e  = RestrictedFileField(max_upload_size=2621440)
 
 class RequestQueue(models.Model):
 	codetocompile=models.OneToOneField(CodeToCompile)
