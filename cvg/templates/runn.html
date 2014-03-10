@@ -1,8 +1,59 @@
 {% include "navbar.html" %}
 
-<h2> RUNNING .... </h2>
-<form action="/onlinejudge/viewsubmission/{{obid}}" method="get">
-	<button type="submit" value="View Submission">View Submission</button>
-</form>
+
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.multilevelpushmenu.css">
+<style>
+#pushobj {
+	position: absolute;
+	top: 55px;
+	left:18%;width:75%;
+	color: #0070c0;
+	background: #FFF;
+	font-family: 'Open Sans Condensed', sans-serif;
+	z-index: 1;
+	float:left;
+}
+</style> 	
+<script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
+<script>
+$(document).ready(function(){
+	// HTML markup implementation, overlap mode
+	$( '#menu' ).multilevelpushmenu({
+		containersToPush: [$( '#pushobj' )]
+	});
+});
+
+
+
+
+
+</script>
+
+	
+
+	<div id="pushobj">
+	
+	<h2> Queued for Processing .... <br> Refresh page to see the submission result</h2>
+	
+	
+    </div>
+        <div id="menu">
+            <nav>
+               
+            	<h2><i class="fa fa-reorder"></i>{{cont.name}}</h2>
+                               
+         		{% block content %}
+				<ul>
+					{% for p in problems %}
+						<li> <a href="/onlinejudge/contest/{{cont.id}}/{{p.id}}/">  {{p.name}}  </a></li>
+					{% endfor %}					
+									
+				</ul>
+				{% endblock %}                     
+                          
+            </nav>
+        </div>
+
+
 </body>
 </html>

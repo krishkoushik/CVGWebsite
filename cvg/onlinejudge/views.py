@@ -7,31 +7,75 @@ from onlinejudge.models import RequestQueue, CurrentContest
 import os
 import subprocess,shlex
 from django.core.files import File
-import thread
+import thread,time
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+
 
 def contest(request,contest_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
 	cont = get_object_or_404(Contest,id=contest_id)
 	return render_to_response("ContestProblems.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
+	if(time.time()-obj.time_of_submission<60):
+				return render_to_response("invalidtime.html",context_instance=RequestContext(request))
+				
 
 def challenges(request,contest_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
+	
 	cont = get_object_or_404(Contest,id=contest_id)
-	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,},context_instance=RequestContext(request))
+	t=time.time()
+	msg=""
+	
+	if(t<cont.start_time):
+		timer=int(cont.start_time) - t
+		hour = int(timer/3600)
+		minute=int((timer%3600)/60)
+		second=int((timer%3600)%60)
+		msg="The contest ends in about "+str(hour)+" hours and "+str(minute)+" minutes and " + str(second) + " seconds from now"
+	elif(t>cont.start_time+cont.time):
+		msg="The contest has ended"
+	else:
+	 	timer=int(cont.start_time)+int(cont.time)-t
+		hour = int(timer/3600)
+		minute=int((timer%3600)/60)
+		second=int((timer%3600)%60)
+		msg="The contest ends in about "+str(hour)+" hours and "+str(minute)+" minutes and " + str(second) + " seconds from now"
+	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,'msg':msg},context_instance=RequestContext(request))
 
 submission_message=''
 
 def contestproblem(request,contest_id,problem_id):
 	if request.user.is_anonymous():
 		return HttpResponseRedirect("/onlinejudge")
+	t=time.time()
 	cont = get_object_or_404(Contest,id=contest_id)
+	if(cont.start_time>t):
+		return HttpResponseRedirect("/onlinejudge/contest/"+str(cont.id))
+	t=time.time()
+	msg=""
+	
+	if(t>cont.start_time+cont.time):
+		msg="The contest has ended. Your submission will not affect the scorecard "
+	else:
+	 	timer=int(cont.start_time)+int(cont.time)-t
+		hour = int(timer/3600)
+		minute=int((timer%3600)/60)
+		second=int((timer%3600)%60)
+		msg="The contest ends in about "+str(hour)+" hours and "+str(minute)+" minutes and " + str(second) + " seconds from now"
+
 	prob = get_object_or_404(Problem,contest=cont,id=problem_id) 
 	form = UploadFileForm();
-	return render_to_response("display_prob.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob,'form':form,'message':submission_message},context_instance=RequestContext(request))
+	code_lst = CodeToCompile.objects.filter(user=request.user,problemid=prob)
+	if(code_lst.count()==0):
+		return render_to_response("display_prob.html",{'cont':cont,'msg':msg,'problems':Problem.objects.filter(contest=cont),'prob':prob,'form':form,'message':submission_message},context_instance=RequestContext(request))
+	
+	code=code_lst[0]
+	fi=open(code.fil_e,"r")
+
+	return render_to_response("display_prob_code.html",{'cont':cont,'msg':msg,'code':code,'fi':fi,'problems':Problem.objects.filter(contest=cont),'prob':prob,'form':form,'message':submission_message},context_instance=RequestContext(request))
 	
 
 	
@@ -118,6 +162,8 @@ def viewsubmission(request,obid):
 		return HttpResponseRedirect("/onlinejudge")
 	
 	code=get_object_or_404(CodeToCompile,id=obid)
+	cont=code.problemid.contest
+
 	if code.user!=request.user:
 		return HttpResponseRedirect("/onlinejudge")
 
@@ -125,9 +171,9 @@ def viewsubmission(request,obid):
 		a = open(code.fil_e,"r")
 		b = open(code.compileoutp,"r")
 		c = open(code.runtimeoutp,"r")
-		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code},context_instance=RequestContext(request))
+		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code,'cont':cont,'problems':Problem.objects.filter(contest=cont)},context_instance=RequestContext(request))
 	else : 
-		return render_to_response('runn.html',{'obid':obid},context_instance=RequestContext(request))
+		return render_to_response('runn.html',{'obid':obid,'cont':cont,'problems':Problem.objects.filter(contest=cont)},context_instance=RequestContext(request))
 
 def upload_file(request,problem_id):
 	if request.user.is_anonymous():
@@ -139,6 +185,7 @@ def upload_file(request,problem_id):
 		if fo.is_valid():
 			form = request.FILES
 #Problem object with problem id will be ensured during problem creation
+
 			prob = get_object_or_404(Problem,id=problem_id)
 			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 			if created is True:
@@ -155,21 +202,28 @@ def upload_file(request,problem_id):
 #Creating files for compile and runtime output
 				obj.compileoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_compileroutput"
 				obj.runtimeoutp="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_runtimeroutput"
-
+				
 #Relating to the problem
 				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.processed="n"
+				obj.time_of_submission=time.time()
 				obj.save()	
 
 
 			else:
 
 #Deleting the previous file for this object and saving the new uploaded file
+				t=int(time.time())
+				cont=prob.contest
+				if(t - obj.time_of_submission < 60 ):
+					return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
+				
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
 				obj.fil_e ="media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				obj.compilemessage="Compiling..."
 				obj.runtimemessage="Not Run..."
 				obj.processed="n"
+				obj.time_of_submission=time.time()
 				obj.status="In the queue" #This should be changed to Processing when it is processed
 				obj.save()
 				fil = open(obj.fil_e,"w+")
@@ -221,14 +275,20 @@ def handle_editor(request,problem_id):
 			obj.compileoutp="media/code/"+str(obj.user.id)+"_compileroutput"
 			obj.runtimeoutp="media/code/"+str(obj.user.id)+"_runtimeroutput"
 			obj.processed="n"
+			obj.time_of_submission=time.time()
 			obj.save()
 		else:
+			t=int(time.time())
+			cont=prob.contest
+			if(t - obj.time_of_submission < 60 ):
+				return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
 			subprocess.call(["rm","-f",obj.fil_e],shell=False)
 			
 			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)
 			obj.fil_e ="media/code/"+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"	
+			obj.time_of_submission=time.time()
 			obj.processed="n"
 			obj.save()
 			fil = open(obj.compileoutp,"w+")

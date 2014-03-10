@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from ckeditor.fields import RichTextField
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
+	time = models.IntegerField()
+	start_time = models.IntegerField()
 	def __str__(self):
 		return self.name
 
@@ -31,6 +33,7 @@ class CodeToCompile(models.Model):
 	problemid = models.ForeignKey(Problem)
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
+	time_of_submission=models.IntegerField(null=True,blank=True)
 
 class UploadFileForm(forms.Form):
 	fil_e  = forms.FileField()
