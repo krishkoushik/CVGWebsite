@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.core.files import File
 from django.contrib.auth.models import User
+import subprocess,shlex
 
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
@@ -16,10 +17,21 @@ class CurrentContest(models.Model):
 class Problem(models.Model):
 	name = models.CharField(max_length=100)
 	statement = models.CharField(max_length=2000)
-	compile_line = models.CharField(max_length=300)
+	arguements = models.CharField(max_length=300)
+	time_limit = models.IntegerField()
+	mem_limit = models.IntegerField()
+	disk_limit = models.IntegerField()
 	contest = models.ForeignKey(Contest)
-	def __str__(self):
+	check_script = models.CharField(max_length=100)
+	prob_dir = models.CharField(max_length=100)
+	def __unicode__(self):
 		return self.name
+	def save(self, *args, **kwargs):
+		self.prob_dir = "media/problems/"+str(self.id)+"/"
+#Creating a Directory for this problem
+		subprocess.call(shlex.split("mkdir -p media/problems/"+str(self.id)))
+		self.check_script = self.prob_dir+"script.sh"
+		super(Problem, self).save(*args, **kwargs)
 
 class CodeToCompile(models.Model):
 	user = models.ForeignKey(User)

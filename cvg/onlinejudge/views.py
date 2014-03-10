@@ -50,6 +50,7 @@ def handle_uploaded_file(obid):
 	print "youoiu"	
 #Compiling code and storing the compile message in object
 	code = get_object_or_404(CodeToCompile,id=obid)
+	prob = code.problemid
 	dir_jail_name = "media/code/"+str(code.user.id)+"_"+str(code.problemid.id)+"/"	
 	arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
 	comp = open(dir_jail_name+"compilemessage.txt","wb+")#creating a compile message file
@@ -77,9 +78,9 @@ def handle_uploaded_file(obid):
 	runt.close()
 	if out==0 :
 		code.compilemessage = 'Successfully Compiled'
-		arg=shlex.split("sudo python sandcode.py "+dir_jail_name)
+		arg=shlex.split("sudo python sandcodenew.py "+dir_jail_name+" "+prob.time_limit+" "+prob.disk_limit+" "+prob.mem_limit+" "+prob.arguements)
 		runt = open(dir_jail_name+"runtimemessage.txt","wb+")
-		out1=subprocess.Popen(arg,stderr=runt,shell=False)
+		out1=subprocess.Popen(arg,stdout=runt,shell=False)
 #out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid),dir_jail_name,],shell=False);
 		stdo,stder = out1.communicate()
 #		stdo,stder = out2.communicate()
