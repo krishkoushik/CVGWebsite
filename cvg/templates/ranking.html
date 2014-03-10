@@ -1,9 +1,9 @@
 {% include "navbar.html" %}
 
 {% for position in f2 %}
-<p>	position.0  
+<p>	{{position.0}}  
 	{% for pos in position.1 %}
-		pos
+		{{pos}}
 </p>
 	{% endfor %}
 {% endfor %}
