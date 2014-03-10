@@ -45,6 +45,7 @@ urlpatterns = patterns('',
     url(r'^onlinejudge/upload_file/(?P<problem_id>\d+)/$', 'onlinejudge.views.upload_file', name='upload_file'),
     url(r'^onlinejudge/viewsubmission/(?P<obid>\d+)/$', 'onlinejudge.views.viewsubmission', name='viewsubmission'),
     url(r'^onlinejudge/contest/(?P<contest_id>\d+)/$', 'onlinejudge.views.contest', name='contest'),
+    url(r'^onlinejudge/ranking/(?P<contest_id>\d+)/$', 'onlinejudge.views.ranking', name='ranking'),
 
    # url(r'^cvg/', include('cvg.foo.urls')),
 

@@ -34,6 +34,11 @@ class CodeToCompile(models.Model):
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
 	time_of_submission=models.IntegerField(null=True,blank=True)
+	#accepted=models.IntegerField()
+	language=models.IntegerField()# 0 means C++ and 1 means C code
+	def __init__(self):
+		self.language=0
+		self.accepted=0
 
 class UploadFileForm(forms.Form):
 	fil_e  = forms.FileField()
