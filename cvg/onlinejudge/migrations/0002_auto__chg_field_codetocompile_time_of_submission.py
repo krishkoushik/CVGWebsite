@@ -8,38 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Post'
-        db.create_table(u'blog_post', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=50)),
-            ('brief', self.gf('django.db.models.fields.TextField')()),
-            ('text', self.gf('ckeditor.fields.RichTextField')()),
-            ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-        ))
-        db.send_create_signal(u'blog', ['Post'])
 
-        # Adding model 'Comment'
-        db.create_table(u'blog_comment', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=42)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
-            ('website', self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True)),
-            ('text', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['blog.Post'])),
-            ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-        ))
-        db.send_create_signal(u'blog', ['Comment'])
-
+        # Changing field 'CodeToCompile.time_of_submission'
+        db.alter_column(u'onlinejudge_codetocompile', 'time_of_submission', self.gf('django.db.models.fields.IntegerField')(null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Post'
-        db.delete_table(u'blog_post')
 
-        # Deleting model 'Comment'
-        db.delete_table(u'blog_comment')
-
+        # Changing field 'CodeToCompile.time_of_submission'
+        db.alter_column(u'onlinejudge_codetocompile', 'time_of_submission', self.gf('django.db.models.fields.IntegerField')(default=1394390400))
 
     models = {
         u'auth.group': {
@@ -71,33 +47,52 @@ class Migration(SchemaMigration):
             'user_permissions': ('django.db.models.fields.related.ManyToManyField', [], {'to': u"orm['auth.Permission']", 'symmetrical': 'False', 'blank': 'True'}),
             'username': ('django.db.models.fields.CharField', [], {'unique': 'True', 'max_length': '30'})
         },
-        u'blog.comment': {
-            'Meta': {'object_name': 'Comment'},
-            'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            'email': ('django.db.models.fields.EmailField', [], {'max_length': '75'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '42'}),
-            'post': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['blog.Post']"}),
-            'text': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'website': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'})
-        },
-        u'blog.post': {
-            'Meta': {'object_name': 'Post'},
-            'author': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"}),
-            'brief': ('django.db.models.fields.TextField', [], {}),
-            'created_on': ('django.db.models.fields.DateTimeField', [], {'auto_now_add': 'True', 'blank': 'True'}),
-            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'slug': ('django.db.models.fields.SlugField', [], {'unique': 'True', 'max_length': '50'}),
-            'text': ('ckeditor.fields.RichTextField', [], {}),
-            'title': ('django.db.models.fields.CharField', [], {'max_length': '100'})
-        },
         u'contenttypes.contenttype': {
             'Meta': {'ordering': "('name',)", 'unique_together': "(('app_label', 'model'),)", 'object_name': 'ContentType', 'db_table': "'django_content_type'"},
             'app_label': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'model': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+        },
+        u'onlinejudge.codetocompile': {
+            'Meta': {'object_name': 'CodeToCompile'},
+            'compilemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'compileoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'fil_e': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'problemid': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Problem']"}),
+            'processed': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
+            'runtimemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'runtimeoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'status': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'time_of_submission': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
+        },
+        u'onlinejudge.contest': {
+            'Meta': {'object_name': 'Contest'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'start_time': ('django.db.models.fields.IntegerField', [], {}),
+            'time': ('django.db.models.fields.IntegerField', [], {})
+        },
+        u'onlinejudge.currentcontest': {
+            'Meta': {'object_name': 'CurrentContest'},
+            'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
+        },
+        u'onlinejudge.problem': {
+            'Meta': {'object_name': 'Problem'},
+            'compile_line': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'statement': ('ckeditor.fields.RichTextField', [], {})
+        },
+        u'onlinejudge.requestqueue': {
+            'Meta': {'object_name': 'RequestQueue'},
+            'codetocompile': ('django.db.models.fields.related.OneToOneField', [], {'to': u"orm['onlinejudge.CodeToCompile']", 'unique': 'True'}),
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'})
         }
     }
 
-    complete_apps = ['blog']
+    complete_apps = ['onlinejudge']

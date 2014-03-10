@@ -1,0 +1,130 @@
+
+	{% include "navbar.html" %}
+
+<meta charset="utf-8"/>
+<link rel="stylesheet" href="{{ STATIC_URL }}css/docs.css">
+
+<link rel="stylesheet" href="{{ STATIC_URL }}css/codemirror.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}css/dialog.css">
+
+<script src="{{ STATIC_URL }}js/codemirror.js"></script>
+<script src="{{ STATIC_URL }}js/dialog.js"></script>
+<script src="{{ STATIC_URL }}js/searchcursor.js"></script>
+<script src="{{ STATIC_URL }}js/clike.js"></script>
+<script src="{{ STATIC_URL }}js/vim.js"></script>
+<style type="text/css">
+      .CodeMirror {border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
+</style>
+<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.multilevelpushmenu.css">
+<style>
+#pushobj {
+	position: absolute;
+	top: 55px;
+	left:18%;width:75%;
+	color: #0070c0;
+	background: #FFF;
+	font-family: 'Open Sans Condensed', sans-serif;
+	z-index: 1;
+	float:left;
+}
+</style> 	
+<script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
+<script>
+$(document).ready(function(){
+	// HTML markup implementation, overlap mode
+	$( '#menu' ).multilevelpushmenu({
+		containersToPush: [$( '#pushobj' )]
+	});
+});
+
+
+
+
+
+</script>
+
+	
+	<div id="menu">
+        <nav>
+           
+        	<h2><i class="fa fa-reorder"></i>{{cont.name}}</h2>
+                           
+     		{% block content %}
+			<ul>
+				{% for p in problems %}
+					<li> <a href="/onlinejudge/contest/{{cont.id}}/{{p.id}}/">  {{p.name}}  </a></li>
+				{% endfor %}					
+								
+			</ul>
+			{% endblock %}                     
+                      
+        </nav>
+    </div>
+	<br><br><br>
+	
+	<div id="pushobj">
+	
+	{% autoescape off %}{{prob.statement}}{% endautoescape %}
+	
+	<br>
+		<a href="/onlinejudge/logout/">Logout</a>
+		<h4>{{message}}</h4>
+		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{prob.id}}/' method='POST'>
+			{% csrf_token %}
+				{{form}}
+			<input type="submit" name="submit" value="Submit">
+		</form>
+		
+		
+    
+    <br>
+    <a href="/onlinejudge/viewsubmission/{{code.id}}">Submission Result</a>	
+    <br>
+		
+
+	
+
+	<article>
+
+	<form action="/onlinejudge/editor/submit/{{prob.id}}/" method="POST">
+		{% csrf_token %}
+		<textarea id="code" name="code">
+		{% for i in fi %}
+		{{ i }}
+		{% endfor %}
+		</textarea>
+		<button type="submit" class="btn btn-default">Submit</button>
+	</form>
+
+
+
+		<script>
+		  CodeMirror.commands.save = function(){ alert("Saving"); };
+		  var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+		    lineNumbers: true,
+		    mode: "text/x-csrc",
+		    vimMode: true,
+		    showCursorWhenSelecting: true
+		  });
+		  var editor2 = CodeMirror.fromTextArea(document.getElementById("code2"), {
+		    lineNumbers: true,
+		    mode: "text/x-csrc",
+		    vimMode: true,
+		    showCursorWhenSelecting: true
+		  });
+		</script>
+
+	  </article>
+	</div>
+	
+	
+	
+	
+
+		
+		
+	
+
+</body>
+</html>
+

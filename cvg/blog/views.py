@@ -14,12 +14,14 @@ def search(request):
 	if 'searchbox' in request.GET and request.GET['searchbox']:
 		query=request.GET['searchbox']
 		posts=Post.objects.filter(title__icontains=query)
-		
+		posts=posts|Post.objects.filter(brief__icontains=query)
+		posts=posts|Post.objects.filter(text__icontains=query)
+		posts=posts.order_by("-created_on")
 		return render(request, 'blog.html',{'posts': posts,})
 	
 def blog(request):
 	post_list=Post.objects.all().order_by("-created_on")
-	paginator = Paginator(post_list, 1) # Show 25 contacts per page
+	paginator = Paginator(post_list, 5) # Show 25 contacts per page
 	page = request.GET.get('page')
 	try:
 		posts = paginator.page(page)

@@ -11,7 +11,7 @@
                 <h1 class="page-header">About Us
                 </h1>
                 <ol class="breadcrumb">
-                    <li><a href="index.html">Home</a>
+                    <li><a href="{% url 'home' %}">Home</a>
                     </li>
                     <li class="active">About</li>
                 </ol>
@@ -22,15 +22,13 @@
         <div class="row">
 
             <div class="col-md-6">
-            <br>
-            <br>
-                <img class="img-responsive" src="../media/images/Picture1.jpg">
+                <img class="img-responsive" id="img_about" src="../media/images/Picture1.jpg">
             </div>
             <div class="col-md-6">
                 <h2>Computer Vision Group, IIT Madras</h2>
                 <p>Computer Vision Group (CVG) – IIT Madras was started in September 2009 with a vision of building a team of students with deep expertise in the technology of Computer Vision. Idea for the formation of such a club was seeded in 2008 when the IIT Madras team had represented India at the International Aerial Robotics Competition (IARC).</p>
                 <p>CVG which competed against elite teams like Georgia Institute of Technology, University of Michigan, Virginia Tech., South Dakota School of Mines & Technology, etc. in IARC 2009 was acknowledged as the best vision team among all the participating teams.</p>
-                <p>In subsequent years CVG moved on to solve problems faced by the industry through the center for Industrial Consultancy & Sponsored Research, IIT Madras, by applying its specialized knowledge in the areas of computer vision, image processing and machine learning.</p>  
+                <p>In subsequent years CVG moved on to solve problems faced by the industry through the Center for Industrial Consultancy & Sponsored Research, IIT Madras, by applying its specialized knowledge in the areas of computer vision, image processing and machine learning.</p>  
                 <p>With a set of extraordinarily talented, motivated and committed group members, CVG has worked on many innovative projects in areas such as manufacturing, transport, advertising, agriculture, education etc. Since its first industrial consultancy project in 2011, the group has advised more than 15 niche technology consulting assignments.</p>                
             </div>
 

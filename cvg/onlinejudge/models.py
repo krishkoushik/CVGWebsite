@@ -3,9 +3,12 @@ from django import forms
 from django.core.files import File
 from django.contrib.auth.models import User
 import subprocess,shlex
+from ckeditor.fields import RichTextField
 
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
+	time = models.IntegerField()
+	start_time = models.IntegerField()
 	def __str__(self):
 		return self.name
 
@@ -16,11 +19,12 @@ class CurrentContest(models.Model):
 
 class Problem(models.Model):
 	name = models.CharField(max_length=100)
-	statement = models.CharField(max_length=2000)
 	arguements = models.CharField(max_length=300)
 	time_limit = models.IntegerField()
 	mem_limit = models.IntegerField()
 	disk_limit = models.IntegerField()
+	statement = RichTextField()
+	compile_line = models.CharField(max_length=300)
 	contest = models.ForeignKey(Contest)
 	check_script = models.CharField(max_length=100)
 	prob_dir = models.CharField(max_length=100)
@@ -43,6 +47,12 @@ class CodeToCompile(models.Model):
 	problemid = models.ForeignKey(Problem)
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
+	time_of_submission=models.IntegerField(null=True,blank=True)
+	#accepted=models.IntegerField()
+	language=models.IntegerField()# 0 means C++ and 1 means C code
+	def __init__(self):
+		self.language=0
+		self.accepted=0
 
 class UploadFileForm(forms.Form):
 	fil_e  = forms.FileField()

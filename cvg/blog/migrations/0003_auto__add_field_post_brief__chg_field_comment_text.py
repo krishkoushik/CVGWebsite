@@ -8,38 +8,26 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Post'
-        db.create_table(u'blog_post', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('title', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('slug', self.gf('django.db.models.fields.SlugField')(unique=True, max_length=50)),
-            ('brief', self.gf('django.db.models.fields.TextField')()),
-            ('text', self.gf('ckeditor.fields.RichTextField')()),
-            ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('author', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-        ))
-        db.send_create_signal(u'blog', ['Post'])
+        # Adding field 'Post.brief'
+        db.add_column(u'blog_post', 'brief',
+                      self.gf('django.db.models.fields.TextField')(default='hello'),
+                      keep_default=False)
 
-        # Adding model 'Comment'
-        db.create_table(u'blog_comment', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=42)),
-            ('email', self.gf('django.db.models.fields.EmailField')(max_length=75)),
-            ('website', self.gf('django.db.models.fields.URLField')(max_length=200, null=True, blank=True)),
-            ('text', self.gf('django.db.models.fields.TextField')(null=True, blank=True)),
-            ('post', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['blog.Post'])),
-            ('created_on', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-        ))
-        db.send_create_signal(u'blog', ['Comment'])
 
+        # Changing field 'Comment.text'
+        db.alter_column(u'blog_comment', 'text', self.gf('django.db.models.fields.TextField')(null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Post'
-        db.delete_table(u'blog_post')
+        # Deleting field 'Post.brief'
+        db.delete_column(u'blog_post', 'brief')
 
-        # Deleting model 'Comment'
-        db.delete_table(u'blog_comment')
 
+        # User chose to not deal with backwards NULL issues for 'Comment.text'
+        raise RuntimeError("Cannot reverse this migration. 'Comment.text' and its values cannot be restored.")
+        
+        # The following code is provided here to aid in writing a correct migration
+        # Changing field 'Comment.text'
+        db.alter_column(u'blog_comment', 'text', self.gf('django.db.models.fields.TextField')())
 
     models = {
         u'auth.group': {

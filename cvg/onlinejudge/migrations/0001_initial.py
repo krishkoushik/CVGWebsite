@@ -12,6 +12,8 @@ class Migration(SchemaMigration):
         db.create_table(u'onlinejudge_contest', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('time', self.gf('django.db.models.fields.IntegerField')()),
+            ('start_time', self.gf('django.db.models.fields.IntegerField')()),
         ))
         db.send_create_signal(u'onlinejudge', ['Contest'])
 
@@ -26,7 +28,7 @@ class Migration(SchemaMigration):
         db.create_table(u'onlinejudge_problem', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('statement', self.gf('django.db.models.fields.CharField')(max_length=2000)),
+            ('statement', self.gf('ckeditor.fields.RichTextField')()),
             ('compile_line', self.gf('django.db.models.fields.CharField')(max_length=300)),
             ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
         ))
@@ -44,6 +46,7 @@ class Migration(SchemaMigration):
             ('problemid', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Problem'])),
             ('status', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('processed', self.gf('django.db.models.fields.CharField')(max_length=1)),
+            ('time_of_submission', self.gf('django.db.models.fields.IntegerField')()),
         ))
         db.send_create_signal(u'onlinejudge', ['CodeToCompile'])
 
@@ -120,12 +123,15 @@ class Migration(SchemaMigration):
             'runtimemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'runtimeoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'time_of_submission': ('django.db.models.fields.IntegerField', [], {}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'onlinejudge.contest': {
             'Meta': {'object_name': 'Contest'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'})
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'start_time': ('django.db.models.fields.IntegerField', [], {}),
+            'time': ('django.db.models.fields.IntegerField', [], {})
         },
         u'onlinejudge.currentcontest': {
             'Meta': {'object_name': 'CurrentContest'},
@@ -138,7 +144,7 @@ class Migration(SchemaMigration):
             'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'statement': ('django.db.models.fields.CharField', [], {'max_length': '2000'})
+            'statement': ('ckeditor.fields.RichTextField', [], {})
         },
         u'onlinejudge.requestqueue': {
             'Meta': {'object_name': 'RequestQueue'},
