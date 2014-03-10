@@ -77,7 +77,9 @@ $(document).ready(function(){
 		
 		
     
-    
+    <br>
+    <a href="/onlinejudge/viewsubmission/{{code.id}}">Submission Result</a>	
+    <br>
 		
 
 	
@@ -87,6 +89,9 @@ $(document).ready(function(){
 	<form action="/onlinejudge/editor/submit/{{prob.id}}/" method="POST">
 		{% csrf_token %}
 		<textarea id="code" name="code">
+		{% for i in fi %}
+		{{ i }}
+		{% endfor %}
 		</textarea>
 		<button type="submit" class="btn btn-default">Submit</button>
 	</form>

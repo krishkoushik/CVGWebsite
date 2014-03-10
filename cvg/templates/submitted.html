@@ -1,30 +1,40 @@
 {% include "navbar.html" %}
 
-		<script>
-		function loadXMLDoc(url)
-		{
-			var xmlhttp;
-			if (window.XMLHttpRequest)
-			{// code for IE7+, Firefox, Chrome, Opera, Safari
-				xmlhttp=new XMLHttpRequest();
-			}
-			else
-			{// code for IE6, IE5
-				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-			}
-			xmlhttp.onreadystatechange=function()
-			{
-				if (xmlhttp.readyState==4 && xmlhttp.status==200)
-				{
-					document.getElementById('p1').innerHTML="Poda";//xmlhttp.getAllResponseHeaders();
-				}
-			}
-			xmlhttp.open("GET",url,true);
-			xmlhttp.send();
-		}
-		//var refint = setInterval(function(){alert("Hi");/*loadXMLDoc('result.txt')*/},3000);
-		</script>
+		
+		
+		
+		<link rel="stylesheet" href="{{STATIC_URL}}css/jquery.multilevelpushmenu.css">
+<style>
+#pushobj {
+	position: absolute;
+	top: 55px;
+	left:18%;width:75%;
+	color: #0070c0;
+	background: #FFF;
+	font-family: 'Open Sans Condensed', sans-serif;
+	z-index: 1;
+	float:left;
+}
+</style> 	
+<script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
+<script>
+$(document).ready(function(){
+	// HTML markup implementation, overlap mode
+	$( '#menu' ).multilevelpushmenu({
+		containersToPush: [$( '#pushobj' )]
+	});
+});
 
+
+
+
+
+</script>
+
+	
+
+	<div id="pushobj">
+		
 		<h1>{{ code.compilemessage }}</h1>
 		<h3>Compile Message</h3>
 
@@ -56,5 +66,32 @@
 			</code>
 		</pre>
 		<a href="/onlinejudge">Home</a>
+	
+    </div>
+        <div id="menu">
+            <nav>
+               
+            	<h2><i class="fa fa-reorder"></i>{{cont.name}}</h2>
+                               
+         		{% block content %}
+				<ul>
+					{% for p in problems %}
+						<li> <a href="/onlinejudge/contest/{{cont.id}}/{{p.id}}/">  {{p.name}}  </a></li>
+					{% endfor %}					
+									
+				</ul>
+				{% endblock %}                     
+                          
+            </nav>
+        </div>
+	
+	
+	
+	
+
+		
+		
+		
+		
 	</body>
 </html>

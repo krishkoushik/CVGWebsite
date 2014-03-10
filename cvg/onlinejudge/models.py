@@ -6,6 +6,8 @@ from ckeditor.fields import RichTextField
 from formatChecker import RestrictedFileField
 class Contest(models.Model):
 	name = models.CharField(max_length=100)
+	time = models.IntegerField()
+	start_time = models.IntegerField()
 	def __str__(self):
 		return self.name
 
@@ -32,9 +34,9 @@ class CodeToCompile(models.Model):
 	problemid = models.ForeignKey(Problem)
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
+	time_of_submission=models.IntegerField(null=True,blank=True)
 	#accepted=models.IntegerField()
 	language=models.IntegerField()# 0 means C++ and 1 means C code
-	
 	def __init__(self):
 		self.language=0
 		self.accepted=0

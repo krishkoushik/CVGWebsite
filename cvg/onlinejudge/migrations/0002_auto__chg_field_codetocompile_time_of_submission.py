@@ -8,72 +8,14 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Contest'
-        db.create_table(u'onlinejudge_contest', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('time', self.gf('django.db.models.fields.IntegerField')()),
-            ('start_time', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'onlinejudge', ['Contest'])
 
-        # Adding model 'CurrentContest'
-        db.create_table(u'onlinejudge_currentcontest', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
-        ))
-        db.send_create_signal(u'onlinejudge', ['CurrentContest'])
-
-        # Adding model 'Problem'
-        db.create_table(u'onlinejudge_problem', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('statement', self.gf('ckeditor.fields.RichTextField')()),
-            ('compile_line', self.gf('django.db.models.fields.CharField')(max_length=300)),
-            ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
-        ))
-        db.send_create_signal(u'onlinejudge', ['Problem'])
-
-        # Adding model 'CodeToCompile'
-        db.create_table(u'onlinejudge_codetocompile', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['auth.User'])),
-            ('fil_e', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('compileoutp', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('runtimeoutp', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('compilemessage', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('runtimemessage', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('problemid', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Problem'])),
-            ('status', self.gf('django.db.models.fields.CharField')(max_length=100)),
-            ('processed', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('time_of_submission', self.gf('django.db.models.fields.IntegerField')()),
-        ))
-        db.send_create_signal(u'onlinejudge', ['CodeToCompile'])
-
-        # Adding model 'RequestQueue'
-        db.create_table(u'onlinejudge_requestqueue', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('codetocompile', self.gf('django.db.models.fields.related.OneToOneField')(to=orm['onlinejudge.CodeToCompile'], unique=True)),
-        ))
-        db.send_create_signal(u'onlinejudge', ['RequestQueue'])
-
+        # Changing field 'CodeToCompile.time_of_submission'
+        db.alter_column(u'onlinejudge_codetocompile', 'time_of_submission', self.gf('django.db.models.fields.IntegerField')(null=True))
 
     def backwards(self, orm):
-        # Deleting model 'Contest'
-        db.delete_table(u'onlinejudge_contest')
 
-        # Deleting model 'CurrentContest'
-        db.delete_table(u'onlinejudge_currentcontest')
-
-        # Deleting model 'Problem'
-        db.delete_table(u'onlinejudge_problem')
-
-        # Deleting model 'CodeToCompile'
-        db.delete_table(u'onlinejudge_codetocompile')
-
-        # Deleting model 'RequestQueue'
-        db.delete_table(u'onlinejudge_requestqueue')
-
+        # Changing field 'CodeToCompile.time_of_submission'
+        db.alter_column(u'onlinejudge_codetocompile', 'time_of_submission', self.gf('django.db.models.fields.IntegerField')(default=1394390400))
 
     models = {
         u'auth.group': {
@@ -123,7 +65,7 @@ class Migration(SchemaMigration):
             'runtimemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'runtimeoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'time_of_submission': ('django.db.models.fields.IntegerField', [], {}),
+            'time_of_submission': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'onlinejudge.contest': {
