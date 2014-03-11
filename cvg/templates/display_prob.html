@@ -89,7 +89,9 @@ $(document).ready(function(){
 		{% csrf_token %}
 		<textarea id="code" name="code">
 		</textarea>
-		<button type="submit" class="btn btn-default">Submit</button>
+		<button type="submit" class="btn btn-default">Submit</button><br>
+		<input type="radio" name="lang" value="0" checked="checked">C++<br>
+		<input type="radio" name="lang" value="1">C<br>
 	</form>
 
 

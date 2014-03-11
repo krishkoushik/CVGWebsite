@@ -38,33 +38,29 @@ $(document).ready(function(){
 		<h1>{{ code.compilemessage }}</h1>
 		<h3>Compile Message</h3>
 
+		<pre>
+			{% for i in compile %}
+			{{ i }}
+			{% endfor %}
+		</pre>
 		<hr>
-			<pre>
-				{% for i in compile %}
-				{{ i }}
-				{% endfor %}
-			</pre>
-		<hr>
-
 		<h3>{{ code.runtimemessage }}</h3>
-		<hr>
-			<pre>
-				{% for i in runtime %}
-				{{ i }}
-				{% endfor %}
-			</pre>
-		<hr>
+		<!--<pre>
+			{% for i in runtime %}
+			{{ i }}
+			{% endfor %}
+		</pre>!-->
 		<!--<p id="p1">The getAllResponseHeaders() function returns the header information of a resource, like length, server-type, content-type, last-modified, etc.</p>
 		<button onclick='clearInterval(refint)'>Hello</button>-->
 		<hr>
 
-		<pre>
-			<code>
-				{% for i in fil_e %}
-				{{ i }}
-				{% endfor %}
-			</code>
-		</pre>
+<pre>
+	<code>
+		{% for i in fil_e %}
+		{{ i }}
+		{% endfor %}
+	</code>
+</pre>
 		<a href="/onlinejudge">Home</a>
 	
     </div>

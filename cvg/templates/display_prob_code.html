@@ -74,6 +74,8 @@ $(document).ready(function(){
 		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{prob.id}}/' method='POST'>
 			{% csrf_token %}
 				{{form}}
+			<input type="radio" name="lang" value="0" checked="checked">C++<br>
+			<input type="radio" name="lang" value="1">C<br>
 			<input type="submit" name="submit" value="Submit">
 		</form>
 		
@@ -95,6 +97,8 @@ $(document).ready(function(){
 		{{ i }}
 		{% endfor %}
 		</textarea>
+		<input type="radio" name="lang" value="0" checked="checked">C++<br>
+		<input type="radio" name="lang" value="1">C<br>
 		<button type="submit" class="btn btn-default">Submit</button>
 	</form>
 
