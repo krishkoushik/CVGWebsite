@@ -14,11 +14,11 @@ class RestrictedFileField(forms.FileField):
     def clean(self, *args, **kwargs):
         data = super(RestrictedFileField, self).clean(*args, **kwargs)
         try:
-            if data.content_type in self.content_types:
+            #if data.content_type in self.content_types:
                 if data.size > self.max_upload_size:
                     raise forms.ValidationError(_('File size must be under %s. Current file size is %s.') % (filesizeformat(self.max_upload_size), filesizeformat(data.size)))
-            else:
-                raise forms.ValidationError(_('File type (%s) is not supported.') % data.content_type)
+           # else:
+              #  raise forms.ValidationError(_('File type (%s) is not supported.') % data.content_type)
         except AttributeError:
             pass
  

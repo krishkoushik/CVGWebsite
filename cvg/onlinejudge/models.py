@@ -35,11 +35,20 @@ class CodeToCompile(models.Model):
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
 	time_of_submission=models.IntegerField(null=True,blank=True)
-	#accepted=models.IntegerField()
-	language=models.IntegerField()# 0 means C++ and 1 means C code
-	def __init__(self):
-		self.language=0
-		self.accepted=0
+	accepted=models.IntegerField(blank=True,null=True)
+	language=models.IntegerField(blank=True,null=True)# 0 means C++ and 1 means C code
+	"""def create_control_CodeToCompile(sender, usr,prob, created, **kwargs):
+		if created:
+			a = CodeToCompile()
+			a.user = usr
+			a.problemid=prob
+			a.language=0
+			a.accepted=0
+	def __init__(self,usr,prob,lan=0,acc=0):
+		self.language=lan
+		self.accepted=acc
+		self.user=usr
+		self.problemid=prob"""
 
 class UploadFileForm(forms.Form):
 	fil_e  = RestrictedFileField(max_upload_size=2621440)

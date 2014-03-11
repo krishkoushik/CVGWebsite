@@ -10,6 +10,7 @@ from django.core.files import File
 import thread,time
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 def ranking(request,contest_id):
 	problems=Problem.objects.filter(contest=contest_id)
@@ -24,12 +25,13 @@ def ranking(request,contest_id):
 	for j in range(problems.count()-1):
 		mapping[problems[j+1]]=i
 		i=i+1
-		codes=codes+CodeToCompile.objects.filter(problemid=problems[j+1])
+		codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
+	#print codes
 	
 	final={}
 	for code in codes:
 		if code.accepted is not 0:
-			if final.has_key(code.usr):
+			if final.has_key(code.user):
 				final[code.user][0]=final[code.user][0]+code.accepted
 				final[code.user][1]=final[code.user][1]+code.time_of_submission
 				final[code.user][mapping[code.problemid]]=1
@@ -47,9 +49,9 @@ def ranking(request,contest_id):
 	f2=sorted(f, key=lambda x: (x[1][0]),reverse=True)
 	lenght=len(f2)
 	userlist=[]
-	for i in range(lenght):
-		user=User.objects.get(id=f2[i][0])
-		f2[i][0]=user.name
+	"""for i in range(lenght):
+		#user=User.objects.get(id=f2[i][0])
+		f2[i][0]=f2[i][0].username#f2[i][0]=user.name"""
 		
 	problemlist=[]
 	for problem in problems:
@@ -319,7 +321,8 @@ def handle_editor(request,problem_id):
 		prob = get_object_or_404(Problem,id=problem_id)
 		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 		if created is True:
-			
+			obj.accepted=0
+			obj.language=0
 			f=open("media/code/"+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)

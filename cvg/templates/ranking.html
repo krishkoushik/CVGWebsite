@@ -1,11 +1,11 @@
 {% include "navbar.html" %}
-
+RANK      USER  SCORE  TOTAL TIME     {% for prob in problemlist %}  {{prob}}  {% endfor %}
+<hr>		
 {% for position in f2 %}
-<p>	{{position.0}}  
-	{% for pos in position.1 %}
-		{{pos}}
-</p>
-	{% endfor %}
-{% endfor %}
+
+{{forloop.counter}}	{{position.0.username}} {% for pos in position.1 %}  	{{pos}}   {% endfor %}
 <hr>
+
+	
+{% endfor %}
 
