@@ -47,7 +47,7 @@ class CodeToCompile(models.Model):
 	problemid = models.ForeignKey(Problem)
 	status = models.CharField(max_length=100)
 	processed = models.CharField(max_length=1)
-#time_of_submission=models.IntegerField(null=True,blank=True)
+	time_of_submission=models.IntegerField(null=True,blank=True)
 	accepted=models.IntegerField(blank=True,null=True)
 	language=models.IntegerField(blank=True,null=True)# 0 means C++ and 1 means C code
 	"""def create_control_CodeToCompile(sender, usr,prob, created, **kwargs):

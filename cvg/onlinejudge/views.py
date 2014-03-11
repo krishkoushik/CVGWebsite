@@ -158,12 +158,14 @@ def handle_uploaded_file(obid):
 	print "youoiu"	
 #Compiling code and storing the compile message in object
 	code = get_object_or_404(CodeToCompile,id=obid)
+	prob = code.problemid
 	dir_jail_name = "media/code/"+str(code.user.id)+"_"+str(code.problemid.id)+"/"	
 	if code.language == 0:
-		arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
+		arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
 	else:
-		arg=shlex.split("gcc -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o output")
-	comp = open("compilemessage.txt","wb+")#creating a compile message file
+		arg=shlex.split("gcc -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
+	print "in handle uploaded file"
+	comp = open(dir_jail_name+"compilemessage.txt","wb+")#creating a compile message file
 	out=subprocess.call(arg,stderr=comp,shell=False)
 	comp.close()
 	print dir_jail_name
@@ -188,7 +190,7 @@ def handle_uploaded_file(obid):
 	runt.close()
 	if out==0 :
 		code.compilemessage = 'Successfully Compiled'
-		arg=shlex.split("sudo python sandcodenew.py "+dir_jail_name+" "+prob.time_limit+" "+prob.disk_limit+" "+prob.mem_limit+" "+prob.arguements)
+		arg=shlex.split("sudo python sandcodenew.py "+dir_jail_name+" "+str(prob.time_limit)+" "+str(prob.disk_limit)+" "+str(prob.mem_limit)+" "+str(prob.arguements))
 		runt = open(dir_jail_name+"runtimemessage.txt","wb+")
 		out1=subprocess.Popen(arg,stdout=runt,shell=False)
 #out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid),dir_jail_name,],shell=False);
@@ -251,7 +253,7 @@ def upload_file(request,problem_id):
 
 			prob = get_object_or_404(Problem,id=problem_id)
 			obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
-			#Creating Jail directory
+#Creating Jail directory
 
 			dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
 			subprocess.call(["rm","-rf",dir_jail_name],shell=False)
@@ -260,6 +262,7 @@ def upload_file(request,problem_id):
 			if created is True:
 				obj.compilemessage="Compiling..."
 				obj.runtimemessage="Not Run..."
+				obj.language=int(request.POST['lang'])
 
 #Creating a file with the uploaded name
 				obj.fil_e=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
@@ -284,10 +287,11 @@ def upload_file(request,problem_id):
 #Deleting the previous file for this object and saving the new uploaded file
 				t=int(time.time())
 				cont=prob.contest
-				if(t - obj.time_of_submission < 60 ):
+				if(t - obj.time_of_submission < 20 ):
 					return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
 				
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
+				obj.language=int(request.POST['lang'])
 				obj.fil_e =dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
 				obj.compilemessage="Compiling..."
 				obj.runtimemessage="Not Run..."
@@ -332,6 +336,7 @@ def handle_editor(request,problem_id):
 	#fo = UploadFileForm(request.POST,request.FILES)
 	if request.method == 'POST':
 		prob = get_object_or_404(Problem,id=problem_id)
+		t=int(time.time())
 		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 		#Creating the jail directory
 		dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
@@ -340,7 +345,7 @@ def handle_editor(request,problem_id):
 		if created is True:
 			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			obj.accepted=0
-			obj.language=int(request.lang)
+			obj.language=int(request.POST['lang'])
 			k = request.POST['code']
 			f.write(k)
 			obj.compilemessage="Compiling..."
@@ -351,13 +356,12 @@ def handle_editor(request,problem_id):
 			obj.time_of_submission=time.time()
 			obj.save()
 		else:
-			t=int(time.time())
 			cont=prob.contest
-			if(t - obj.time_of_submission < 60 ):
+			if(t - int(obj.time_of_submission) < 20 ):
 				return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
 			subprocess.call(["rm","-f",obj.fil_e],shell=False)
 			obj.accepted=0
-			obj.language=int(request.lang)
+			obj.language=int(request.POST['lang'])
 			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)

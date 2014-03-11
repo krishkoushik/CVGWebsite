@@ -203,11 +203,15 @@ if __name__ == '__main__':
 	f = open(sys.argv[1]+"mes.txt","w")
 	f.write("Running Successful")
 	f.close()
-	s = Policy(["./"+sys.argv[1]+"output"]+sys.argv[5:],jail="./"+sys.argv[1],quota=dict(cpu=int(sys.argv[2]),disk=int(sys.argv[3]),memory=int(sys.argv[4]),wallclock=15000),owner="nobody")
+	s = Policy(["./"+sys.argv[1]+"output"]+sys.argv[5:],jail="./"+sys.argv[1],quota=dict(cpu=int(sys.argv[2]),disk=int(sys.argv[3]),memory=int(sys.argv[4]),wallclock=15000),owner="nobody",stderr=open("error.txt","w"))
 	s.run()
 	#print s.quota[0]
 	print "Result : "+str(s.result)
-	if s.result==S_RESULT_RF:
+	if s.result==S_RESULT_OK:
+		f = open(sys.argv[1]+"mes.txt","w")
+		f.write("Running Successful")
+		f.close()
+	elif s.result==S_RESULT_RF:
 		f = open(sys.argv[1]+"mes.txt","w")
 		f.write("Restricted Function Access")
 		f.close()
@@ -223,9 +227,13 @@ if __name__ == '__main__':
 		f = open(sys.argv[1]+"mes.txt","w")
 		f.write("Memory Limit Exceeded")
 		f.close()
+	elif s.result==S_RESULT_AT:
+		f = open(sys.argv[1]+"mes.txt","w")
+		f.write("Bad Exit Code")
+		f.close()
 	else:
 		f = open(sys.argv[1]+"mes.txt","w")
-		f.write("Not Run Properly")
+		f.write("Not Run Properly "+str(s.result))
 		f.close()
 	print s.probe()
 
