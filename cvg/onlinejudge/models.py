@@ -19,12 +19,11 @@ class CurrentContest(models.Model):
 
 class Problem(models.Model):
 	name = models.CharField(max_length=100)
+	statement = RichTextField()
 	arguements = models.CharField(max_length=300)
 	time_limit = models.IntegerField()
 	mem_limit = models.IntegerField()
 	disk_limit = models.IntegerField()
-	statement = RichTextField()
-	compile_line = models.CharField(max_length=300)
 	contest = models.ForeignKey(Contest)
 	check_script = models.CharField(max_length=100)
 	prob_dir = models.CharField(max_length=100)
