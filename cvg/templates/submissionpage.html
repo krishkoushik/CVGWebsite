@@ -37,7 +37,8 @@ function GetFileSize() {
 			{% csrf_token %}
 				{{form}}
 			<input type="submit" id="btn_submit" name="submit" onclick="GetFileSize()" value="Submit">
-		</form>
+		<input type="radio" name="lang" value="0" checked="checked">C++<br>
+		<input type="radio" name="lang" value="1">C<br>
 		<a href="/onlinejudge/editor/{{problem_id}}">Editor</a>
 	</body>
 </html>

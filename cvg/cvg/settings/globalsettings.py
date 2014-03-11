@@ -1,6 +1,7 @@
 # Django settings for cvg project.
 import os.path
 DEBUG = True
+MAX_UPLOAD_SIZE=5242880
 TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.contrib.auth.context_processors.auth",
 	"django.core.context_processors.debug",

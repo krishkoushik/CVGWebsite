@@ -10,6 +10,7 @@ from django.core.files import File
 import thread,time
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 def ranking(request,contest_id):
 	problems=Problem.objects.filter(contest=contest_id)
@@ -24,12 +25,13 @@ def ranking(request,contest_id):
 	for j in range(problems.count()-1):
 		mapping[problems[j+1]]=i
 		i=i+1
-		codes=codes+CodeToCompile.objects.filter(problemid=problems[j+1])
+		codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
+	#print codes
 	
 	final={}
 	for code in codes:
 		if code.accepted is not 0:
-			if final.has_key(code.usr):
+			if final.has_key(code.user):
 				final[code.user][0]=final[code.user][0]+code.accepted
 				final[code.user][1]=final[code.user][1]+code.time_of_submission
 				final[code.user][mapping[code.problemid]]=1
@@ -47,9 +49,9 @@ def ranking(request,contest_id):
 	f2=sorted(f, key=lambda x: (x[1][0]),reverse=True)
 	lenght=len(f2)
 	userlist=[]
-	for i in range(lenght):
-		user=User.objects.get(id=f2[i][0])
-		f2[i][0]=user.name
+	"""for i in range(lenght):
+		#user=User.objects.get(id=f2[i][0])
+		f2[i][0]=f2[i][0].username#f2[i][0]=user.name"""
 		
 	problemlist=[]
 	for problem in problems:
@@ -336,11 +338,12 @@ def handle_editor(request,problem_id):
 		subprocess.call(["rm","-rf",dir_jail_name],shell=False)
 		subprocess.call(["mkdir","-p",dir_jail_name])
 		if created is True:
-			
 			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
+			obj.accepted=0
+			obj.language=int(request.lang)
 			k = request.POST['code']
 			f.write(k)
-                        obj.compilemessage="Compiling..."
+			obj.compilemessage="Compiling..."
 			obj.fil_e=dir_jail_name+str(obj.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp"			
 			obj.compileoutp=dir_jail_name+str(obj.user.id)+"_compileroutput"
 			obj.runtimeoutp=dir_jail_name+str(obj.user.id)+"_runtimeroutput"
@@ -353,7 +356,8 @@ def handle_editor(request,problem_id):
 			if(t - obj.time_of_submission < 60 ):
 				return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
 			subprocess.call(["rm","-f",obj.fil_e],shell=False)
-			
+			obj.accepted=0
+			obj.language=int(request.lang)
 			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
 			k = request.POST['code']
 			f.write(k)
