@@ -256,7 +256,6 @@ def upload_file(request,problem_id):
 #Creating Jail directory
 
 			dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
-			subprocess.call(["rm","-rf",dir_jail_name],shell=False)
 			subprocess.call(["mkdir","-p",dir_jail_name])
 
 			if created is True:
@@ -290,6 +289,8 @@ def upload_file(request,problem_id):
 				if(t - obj.time_of_submission < 20 ):
 					return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
 				
+				subprocess.call(["rm","-rf",dir_jail_name],shell=False)
+				subprocess.call(["mkdir","-p",dir_jail_name])
 				subprocess.call(["rm","-f",obj.fil_e],shell=False)
 				obj.language=int(request.POST['lang'])
 				obj.fil_e =dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+str(fo.cleaned_data["fil_e"].name)
@@ -321,10 +322,12 @@ def upload_file(request,problem_id):
 			obid=obj.id
 		else:
 			submission_message='Improper Upload ...'
-			return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
+			prob = get_object_or_404(Problem,id=problem_id)
+			return HttpResponseRedirect("/onlinejudge/contest/"+str(prob.contest.id)+"/"+str(prob.id))
 	else:
 		submission_message='Improper Upload ...'
-		return HttpResponseRedirect("/onlinejudge/submissionpage/"+str(problem_id))
+		prob = get_object_or_404(Problem,id=problem_id)
+		return HttpResponseRedirect("/onlinejudge/contest/"+str(prob.contest.id)+"/"+str(prob.id))
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
 def handle_editor(request,problem_id):
@@ -340,7 +343,6 @@ def handle_editor(request,problem_id):
 		obj,created = CodeToCompile.objects.get_or_create(user=request.user,problemid=prob)
 		#Creating the jail directory
 		dir_jail_name = "media/code/"+str(obj.user.id)+"_"+str(problem_id)+"/"
-		subprocess.call(["rm","-rf",dir_jail_name],shell=False)
 		subprocess.call(["mkdir","-p",dir_jail_name])
 		if created is True:
 			f=open(dir_jail_name+str(request.user.id)+"_"+str(problem_id)+"_"+"editor_file.cpp","w+")
@@ -359,6 +361,8 @@ def handle_editor(request,problem_id):
 			cont=prob.contest
 			if(t - int(obj.time_of_submission) < 20 ):
 				return render_to_response("invalidtime.html",{'cont':cont,'problems':Problem.objects.filter(contest=cont),'prob':prob},context_instance=RequestContext(request))
+			subprocess.call(["rm","-rf",dir_jail_name],shell=False)
+			subprocess.call(["mkdir","-p",dir_jail_name])
 			subprocess.call(["rm","-f",obj.fil_e],shell=False)
 			obj.accepted=0
 			obj.language=int(request.POST['lang'])
@@ -386,7 +390,8 @@ def handle_editor(request,problem_id):
 		obid=obj.id
 	else:
 		submission_message='Improper Upload ...'
-		return HttpResponseRedirect("/onlinejudge/submissionpage")
+		prob = get_object_or_404(Problem,id=problem_id)
+		return HttpResponseRedirect("/onlinejudge/contest/"+str(prob.contest.id)+"/"+str(prob.id))
 	return HttpResponseRedirect("/onlinejudge/viewsubmission/"+str(obid))
 
 	

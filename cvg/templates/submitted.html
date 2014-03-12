@@ -16,21 +16,9 @@
 	float:left;
 }
 </style> 	
+
+
 <script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
-<script>
-$(document).ready(function(){
-	// HTML markup implementation, overlap mode
-	$( '#menu' ).multilevelpushmenu({
-		containersToPush: [$( '#pushobj' )]
-	});
-});
-
-
-
-
-
-</script>
-
 	
 
 	<div id="pushobj">
@@ -45,13 +33,6 @@ $(document).ready(function(){
 		</pre>
 		<hr>
 		<h3>{{ code.runtimemessage }}</h3>
-		<!--<pre>
-			{% for i in runtime %}
-			{{ i }}
-			{% endfor %}
-		</pre>!-->
-		<!--<p id="p1">The getAllResponseHeaders() function returns the header information of a resource, like length, server-type, content-type, last-modified, etc.</p>
-		<button onclick='clearInterval(refint)'>Hello</button>-->
 		<hr>
 
 <pre>
@@ -91,3 +72,34 @@ $(document).ready(function(){
 		
 	</body>
 </html>
+<script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
+<script>
+$(document).ready(function(){
+	// HTML markup implementation, overlap mode
+	$( '#menu' ).multilevelpushmenu({
+		containersToPush: [$( '#pushobj' )],
+
+		        onItemClick: function() {
+            // First argument is original event object
+            var event = arguments[0],
+            // Second argument is menu level object containing clicked item (<div> element)
+                $menuLevelHolder = arguments[1],
+                // Third argument is clicked item (<li> element)
+                $item = arguments[2],
+                // Fourth argument is instance settings/options object
+                options = arguments[3];
+
+            // You can do some cool stuff here before
+            // redirecting to href location
+            // like logging the event or even
+            // adding some parameters to href, etc...
+
+            // Anchor href
+            var itemHref = $item.find( 'a:first' ).attr( 'href' );
+            // Redirecting the page
+            location.href = itemHref;
+        }
+	});
+});
+</script>
+
