@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Computer Vision Group - Home </title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ STATIC_URL }}css/bootstrap.css" rel="stylesheet">
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,400italic' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+    <!-- Add custom CSS here -->
+    <link href="{{ STATIC_URL }}css/modern-business.css" rel="stylesheet">
+    <link href="{{ STATIC_URL }}font-awesome/css/font-awesome.min.css" rel="stylesheet">
+            <link href="{{ STATIC_URL }}css/style.css" rel="stylesheet">
+</head>
+
+<body>
+ <!-- JavaScript -->
+    <script src="{{ STATIC_URL }}js/jquery-1.10.2.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}js/modern-business.js"></script>
+	<script>
+	$(document).ready(function(){
+		$("#about").click(function(){
+  			$("body, html").animate({
+   		 		scrollTop: $("#page_2").position().top
+			});
+		});
+		$("#projects").click(function(){
+  			$("body, html").animate({
+   		 		scrollTop: $("#page_3").position().top
+			});
+		});
+		$("#contact").click(function(){
+  			$("body, html").animate({
+   		 		scrollTop: $("#page_4").position().top
+			});
+		});
+		$("#cvg_banner").click(function(){
+  			$("body, html").animate({
+   		 		scrollTop: $("body").position().top
+			});
+		});
+	});
+	</script>
+
+ <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- You'll want to use a responsive image option so this logo looks good on devices - I recommend using something like retina.js (do a quick Google search for it and you'll find it) -->
+                <a class="navbar-brand" id="cvg_banner" >Computer Vision Group - IITM</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a id="about" >About</a>
+                    </li>
+					<li><a id="projects" >Projects</a>
+                    </li>
+                    <li><a href="{% url "onlinejudgehome" %}">Challenge</a>
+                    </li>
+					<li><a id="contact" >Contact</a>
+                    </li>
+                    
+          <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+   
+
+
+
+    <div id="myCarousel" class="carousel slide">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+            <li data-target="#myCarousel" data-slide-to="1"></li>
+            <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner">
+            <div class="item active">
+                <div class="fill" style="background-image:url('/media/images/carousel1.jpg');background-size:65% 110%;"></div>
+                
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('/media/images/carousel2.jpg');"></div>
+               
+            </div>
+            <div class="item">
+                <div class="fill" style="background-image:url('/media/images/carousel3.jpg');"></div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+            <span class="icon-prev"></span>
+        </a>
+        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+            <span class="icon-next"></span>
+        </a>
+    </div>
+
+    <div class="section">
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <h3>What is Computer Vision?</h3>
+                    <p>Computer Vision is the science of endowing computers or other machines with vision, or the ability to see.</p>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h3>What We Do</h3>
+                    <p>Computer Vision Group has worked on many innovative projects in areas such as manufacturing, transport, advertising, agriculture, education, etc.</p>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h3>Acheivements</h3>
+                    <ul>
+                    	<li id="sp">Developed cutting-edge technologies that have been patented</li>
+                    	<li id="sp">Platform for Entrepreneurial Ventures and Research Activities</li>
+                	</ul>
+                </div>
+            </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.section -->
+
+    <div id="page_2" class="section-colored ">
+ 
+         <div class="col-lg-12 text-center">
+                    <h1 id="ubu">About</h1>
+                    <hr>
+                </div>
+        <div class="container">
+
+			<div class="row">
+
+            <div class="col-md-6">
+                <img class="img-responsive" id="img_about" src="{{MEDIA_URL}}images/Picture1.jpg">
+            </div>
+            <div class="col-md-6">
+                <h2>Computer Vision Group, IIT Madras</h2>
+                <p>Computer Vision Group (CVG) – IIT Madras was started in September 2009 with a vision of building a team of students with deep expertise in the technology of Computer Vision. Idea for the formation of such a club was seeded in 2008 when the IIT Madras team had represented India at the International Aerial Robotics Competition (IARC).</p>
+                <p>CVG which competed against elite teams like Georgia Institute of Technology, University of Michigan, Virginia Tech., South Dakota School of Mines & Technology, etc. in IARC 2009 was acknowledged as the best vision team among all the participating teams.</p>
+                <p>In subsequent years CVG moved on to solve problems faced by the industry through the center for Industrial Consultancy & Sponsored Research, IIT Madras, by applying its specialized knowledge in the areas of computer vision, image processing and machine learning.</p>  
+                <p>With a set of extraordinarily talented, motivated and committed group members, CVG has worked on many innovative projects in areas such as manufacturing, transport, advertising, agriculture, education etc. Since its first industrial consultancy project in 2011, the group has advised more than 15 niche technology consulting assignments.</p>                
+            </div>
+
+        </div>
+            <!-- /.row -->
+
+        </div>
+        <!-- /.container -->
+
+    </div>
+    <!-- /.section-colored -->
+
+    
+    <!-- /.section -->
+
+    <div id="page_3" class="section-colored">
+
+ 
+         <div class="col-lg-12 text-center">
+                    <h1 id="ubu">Projects</h1>
+                    <hr>
+                </div>
+
+
+             <div class="row" id="white">
+
+            <div class="col-md-5 col-md-offset-1 ">
+                            <img class="img-responsive" id="img_railways" src="{{MEDIA_URL}}images/railways.png">
+            </div>
+            <div class="col-md-6">
+                <h2>Southern Railways</h2>
+                <p >Inspection of overhead­lines, if done manually, is a very tedious and timeconsuming process. An overhead line with faulty alignment can entangle with the running train’s pantograph and break.
+				Currently, Indian Railways do not have an automated inspection system to detect such faults and
+				prevent such a failure.</p>
+                <p>We have developed an automated inspection system, which when mounted on a train, gives
+detailed reports regarding the alignment of the overhead line and automatically alerts for the
+sections that need maintenance. These reports make fault finding very simple and hence act as an
+effective preventive measure against failure, thereby saving a lot of time, effort and maintenance
+costs for the Indian Railways.</p>
+                <p>Our patented technology has been recognized as one among top 100 technologies developed in
+India by FICCI under the India Innovation Growth Program. As compared to systems around the
+world with a similar function, our device is cheaper by a factor of 15.</p>  
+               <br>	
+            </div>
+            <br>
+
+        </div>
+        <!-- /.row -->
+             <div  class="row">
+            <div id="x" class=" col-md-offset-1 col-md-6">
+                <h2>Optical Character Recognition</h2>
+                <p>Optical Character Recognition is an awesome computer vision technique with various applications ranging from saving real text scripts digitally and deriving context based intelligence using Natural Language Processing from the texts. One such application is the automated data logging for quality control in industries.</p>
+                <p>Manual Logging of serial numbers in industries is very tedious and a time consuming affair. This project was done as a pilot project for automated data logging of numerous parts taken out from heavy machines for maintenance. This low cost computer vision based system can detect machine part features and serial numbers and creates a one­to­one map between them for identification and quality control. The serial numbers were engraved on the metal parts. This required us to solve it in two stage. ­ A preprocessing stage which extracts the region of text and segments out the characters and OCR stage which identifies the characters based on a pre­trained model built using Machine Learning techniques.</p>
+        	   <br>	
+        	</div>
+            <div class="col-md-5">
+            <br>
+                <img class="img-responsive" id="img_ocr" src="{{MEDIA_URL}}images/OCR.jpg">
+            </div>
+            <br>
+		</div>
+        <!-- /.row -->
+             <div class="row" id="white">
+
+            <div class="col-md-5 col-md-offset-1 ">
+                            <br>
+            <br>
+                        <br>
+            <br><img class="img-responsive" id="img_railways" src="{{MEDIA_URL}}images/OMR.png">
+            </div>
+            <div class="col-md-6">
+                <h2>OMR Software</h2>
+                <p >Multiple choice questions are becoming a popular means of testing as it provides an alternative to the long drawn answers. Many examinations are being conducted on this basis.Optical mark recognition is the process of capturing human­marked data from document forms such as surveys and tests.Many traditional OMR devices work with a dedicated scanner device that shines a beam of light onto the form paper. The contrasting reflectivity at predetermined positions on a page is then used to detect the marked areas because they reflect less light than the blank areas of the paper.However the OMR machines are expensive and are out of reach for small scale training centres or students from a poor background. This leads to lack of opportunities to practice and can sometimes be the deciding point for the student's life.</p>
+                <p>CVG’s OMR evaluation software is a low cost substitute for commercially available OMR machines. The software was developed in an initiative to support an NGO involved in training deserving students in rural India. The client can use photocopied sheets as marking sheets which are reasonably low cost compared to the default marking sheets. The only hardware that the system would require would be a scanner or camera to feed a soft copy of the marking sheets to be evaluated. This makes the technology quite affordable and ensures that facilites for practicing Multiple choice questions(MCQ's) are available at the smallest centres.</p>
+             <br>	
+            </div>
+<br>
+        </div>
+        <!-- /.row -->
+             <div class="row"  >
+
+			<div class="col-md-6 col-md-offset-1 ">
+                <h2>License Plate Recognition System­</h2>
+                <p >A vehicle registration plate is a metal or plastic plate attached to a motor vehicle for official identification purposes.This data is used in many places for information purpose.For example, in most token vending systems for vehicles, the license plate number is to be recorded. Manual intervention in this process leads to a lot of delays.</p>
+                <p>This technology developed to automate recognition of vehicle’s registration number saves a lot of time and effort in places like toll booths, security check posts, parking lots, etc. Based on the target application where the technology is deployed, it can provide invaluable advantage to the system such as automated levying of token charges.</p>
+                <p>The numbers and the letters are extracted from the image and then the numbers are segmented induvidually. Then the letters and numbers are recognised and stored.</p>  
+               <br>	
+            </div>
+            <div class="col-md-5">
+                        <br>
+           
+                <img class="img-responsive" id="img_railways" src="{{MEDIA_URL}}images/license.png">
+            </div>
+            <br>
+
+        </div>
+        <!-- /.row -->
+             <div class="row" id="white">
+
+            <div class="col-md-5 col-md-offset-1 ">
+                        <br>
+            <br>
+                <img class="img-responsive" id="img_railways" src="{{MEDIA_URL}}images/handtracking.png">
+            </div>
+            <div class="col-md-6">
+                <h2>Human–computer interaction</h2>
+                <p >Humans are interacting social beings and as the gap between the real world and the virtual world becomes smaller, interaction with the computer is a matter of utmost interest. Human–computer interaction (HCI) involves the study, planning, design and uses of the interaction between people and computers.</p>
+                <p>The project presents HCI is many forms. On one side, the user can communicate via gestures to the computer which interprets it to perform various useful operations. In one application it tracks the user's hand to control the mouse pointer , hence providing a gesture based control.This is useful in 3 dimensional modelling,page navigation and playing virtual games.In another application, it recognises gestures and converts them to text.</p>
+                <p>A full video of the HCI project can be found at <a href="https://www.youtube.com/watch?v=h9F5­TH5NwQ">https://www.youtube.com/watch?v=h9F5­TH5NwQ</a></p>  
+           <br>	
+            </div>
+
+
+        </div>
+        <!-- /.row -->
+             <div class="row"  >
+            <div class="col-md-6 col-md-offset-1 ">
+                <h2>Augmented Reality</h2>
+                <p >Virtual or augmented reality is the concept of augmenting virtual entities to information from the real world and enabling interaction with these virtual world elements.</p>
+                <p>This entertainment cum commercial technology from CVG is aimed at taking the user through a whole new experience in interaction.</p>
+                <p>The power of the concept lies in user engagement. This provides the pathway for new and innovative forms of advertising. A user can now view a product in 3D, rotate it and view it from different angles and interact with it in many other ways, all from wherever he/she is, using just a mobile device.</p>  
+            	<p>We have also developed an application through which designers can quickly share their 3D models or designs with their clients elsewhere and be able to take real time feedback. This application enables designers to reach out to a wider range of clients.</p>
+            </div>
+
+            <div class="col-md-5">
+                        <br>
+            
+                <img class="img-responsive" id="img_ar" src="{{MEDIA_URL}}images/AR.png">
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+      
+        <!-- /.container -->
+
+    </div>
+    <!-- /.section-colored -->
+
+    <div id="page_4" class="section">
+
+              <style type="text/css">
+      #map-canvas { height: 250px;
+      width:100%; }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCfBWveOVKMwk41olloFcHe4A6RiY_31aQ&sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: new google.maps.LatLng(12.99212, 80.23089),
+          zoom: 17
+        };
+        var map = new google.maps.Map(document.getElementById("map-canvas"),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h1 class="page-header">Contact
+                </h1>
+             
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-4">
+                <p>Email : <a href="mailto:contactus.cv@gmail.com">contactus.cv@gmail.com</a></p>
+            <ul class="list-unstyled list-inline list-social-icons">
+            <!--
+                    <li class="tooltip-social facebook-link"><a href="http://www.facebook.com/" data-toggle="tooltip" data-placement="top" title="Facebook"><i class="fa fa-facebook-square fa-2x"></i></a>
+                    </li>
+-->                    <li class="tooltip-social linkedin-link"><a href="http://www.linkedin.com/companies/computer-vision-group-iit-madras" data-toggle="tooltip" data-placement="top" title="LinkedIn"><i class="fa fa-linkedin-square fa-2x"></i></a>
+                    </li>
+                </ul></div>
+<div  class="col-lg-4">
+                <p id="add_1big"><strong>Computer Vision Group</strong></p>
+                <p id="add_1">Centre For Innovation</p>
+                <p id="add_1">IIT Madras</p>
+                <p id="add_1">Chennai - 600036</p>
+                
+            </div>
+
+<div class="col-lg-4" onload="initialize()">
+                <div id="map-canvas"/>
+                
+                </div>
+
+
+        </div>
+
+    </div>
+    <!-- /.container -->
+
+
+    </div>
+    <!-- /.section -->
+
+
+    <div class="container">
+
+        <hr>
+
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Computer Vision Group IITM</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- /.container -->
+
+   
+</body>
+
+</html>

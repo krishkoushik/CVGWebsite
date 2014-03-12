@@ -76,17 +76,42 @@ background: linear-gradient(#0070c0, #200020); /* Standard syntax */
         color: #333;
     }
 }
+.img-responsive{
+	width:85%;
+}
+#white{
+background:#FFF;
+}
 .page-header{
 
 font-family: 'Open Sans', sans-serif;
 
 color:#0070c0;
 }
-p {
+#about,#contact,#projects,#cvg_banner
+{
+cursor: pointer; cursor: hand; 
+}
+#sp,p {
 font-family: 'Open Sans', sans-serif;
 font-weight:400;
   color:#606060;
   margin: 0 0 10px;
+}
+#page_3{
+width:100%;
+overflow-x:hidden;
+
+}
+hr{
+  
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0)); 
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0)); 
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0)); 
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgba(0,0,0,0.4), rgba(0,0,0,0)); 
+
 }
 h2,h3{
 font-family: 'Open Sans', sans-serif;
@@ -104,60 +129,21 @@ color:#0070c0;
     margin-top: 2px;
     margin-bottom: 2px;
 }
-#ojhome{
-position:relative;
-top:-10px;
-height:100%;
-width:100%;
-background:#fff;
-}
-#welcum{
-color:#0070c0;
-}
-#challenge_box{
-position:absolute;
-top:45%;left:25%;
-font-size:32px;
-width: 250px;
-height: 80px;
-background-color: rgba(0,56,96,1); 
-border-radius: 10px;
-
-}
-#challenge_text{
-text-align:center;
-margin-top:24px;
-color:#FFF;
-}
-#challenge_text1{
-color:#FFF;
-}
-#practice_box{
-position:absolute;
-top:45%;left:55%;
-font-size:32px;
-width: 250px;
-height: 80px;
-background-color: rgba(0,56,96,1); 
-border-radius: 10px;
-
-}
-#practice_text1{
-color:#FFF;
-}
-#practice_text{
-text-align:center;
-margin-top:24px;
-color:#FFF;
-}
-#logout{
-position:absolute;
-bottom:1%;
-left:50%;
-margin-left:-128px;
-}
 #img_about{
 position:relative;
 top:25px;
+
+}
+#img_ocr{
+position:relative;
+left:15%;
+width:75%;
+}
+#ubu{
+font-family:Ubuntu;
+color:#0070c0;
+}
+#img_ar{
+width:77%;
 
 }

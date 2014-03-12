@@ -8,8 +8,8 @@ from models import Project,Photo,Video
 from django.shortcuts import render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 def home(request):
-	f=[(3,[1,2]),(2,[1,2])]
-	return render_to_response("home.html",{'f':f[0][1][1]},context_instance=RequestContext(request))
+	#f=[(3,[1,2]),(2,[1,2])]
+	return render_to_response("hometemp.html",context_instance=RequestContext(request))
 	
 def about(request):
 	return render_to_response("about.html",context_instance=RequestContext(request))
