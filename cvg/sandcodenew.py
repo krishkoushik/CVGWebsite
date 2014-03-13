@@ -224,7 +224,7 @@ if __name__ == '__main__':
 		f.close()
 	elif s.result==S_RESULT_ML:
 		f = open(sys.argv[1]+"mes.txt","w")
-		f.write("Memory Limit Exceeded")
+		f.write("Segmentation Fault")
 		f.close()
 	elif s.result==S_RESULT_AT:
 		f = open(sys.argv[1]+"mes.txt","w")

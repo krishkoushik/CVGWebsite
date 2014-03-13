@@ -12,3 +12,4 @@ cp --parents /sbin/ldconfig ${1}
 cp --parents /sbin/ldconfig.real ${1}
 cp --parents /etc/ld.so.conf ${1}
 cp --parents /etc/ld.so.conf.d/* ${1}
+cp ${2}* ${1} 
