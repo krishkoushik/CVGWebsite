@@ -12,66 +12,74 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 
-
-	
+f2=[]
 
 def ranking(request,contest_id):
-	
-		
 	problems=Problem.objects.filter(contest=contest_id)
-	num_of_probs=problems.count()
-	mapping={}
-	i=2
-	problem=problems[0]
-	mapping[problem]=i
-	i=i+1
-	codes=CodeToCompile.objects.filter(problemid=problem)
-	cont=Contest.objects.get(id=contest_id)
-
-	for j in range(problems.count()-1):
-		mapping[problems[j+1]]=i
-		i=i+1
-		codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
-	#print codes
-
-	final={}
-	for code in codes:
-		if code.accepted is not 0:
-			if final.has_key(code.user):
-				final[code.user][0]=final[code.user][0]+code.accepted
-				final[code.user][1]=final[code.user][1]+code.time_of_submission-cont.start_time
-				final[code.user][mapping[code.problemid]]=code.accepted
-			else:
-				final[code.user]=[]
-				final[code.user].append(code.accepted)
-				final[code.user].append(code.time_of_submission-cont.start_time)
-			
-				for problem in problems:
-					final[code.user].append('-')
-				final[code.user][mapping[code.problemid]]=code.accepted
-				#final[code.user]["score"]=code.accepted
-				#final[code.user]["time"]=code.time
-			
-	f=sorted(final.items(), key=lambda x: (x[1][1]))
-	f2=sorted(f, key=lambda x: (x[1][0]),reverse=True)
-	lenght=len(f2)
-	userlist=[]
-	"""for i in range(lenght):
-		#user=User.objects.get(id=f2[i][0])
-		f2[i][0]=f2[i][0].username#f2[i][0]=user.name"""
-	
 	problemlist=[]
 	for problem in problems:
-		problemlist.append(problem.name)
-	for a in f2:
-		a[1][1]=a[1][1]/60
+			problemlist.append(problem.name)
+	num_of_probs=problems.count()
+	return render_to_response("ranking.html",{'problemlist':problemlist,'f2':f2,"num_of_probs":num_of_probs,},context_instance=RequestContext(request))
+	
+
+def update_rank(contest_id):
+	
+	while True:	
+		problems=Problem.objects.filter(contest=contest_id)
+		num_of_probs=problems.count()
+		mapping={}
+		i=2
+		problem=problems[0]
+		mapping[problem]=i
+		i=i+1
+		codes=CodeToCompile.objects.filter(problemid=problem)
+		cont=Contest.objects.get(id=contest_id)
+
+		for j in range(problems.count()-1):
+			mapping[problems[j+1]]=i
+			i=i+1
+			codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
+		#print codes
+
+		final={}
+		for code in codes:
+			if code.accepted is not 0:
+				if final.has_key(code.user):
+					final[code.user][0]=final[code.user][0]+code.accepted
+					final[code.user][1]=final[code.user][1]+code.time_of_submission-cont.start_time
+					final[code.user][mapping[code.problemid]]=code.accepted
+				else:
+					final[code.user]=[]
+					final[code.user].append(code.accepted)
+					final[code.user].append(code.time_of_submission-cont.start_time)
+			
+					for problem in problems:
+						final[code.user].append('-')
+					final[code.user][mapping[code.problemid]]=code.accepted
+					#final[code.user]["score"]=code.accepted
+					#final[code.user]["time"]=code.time
+			
+		f=sorted(final.items(), key=lambda x: (x[1][1]))
+		f2=sorted(f, key=lambda x: (x[1][0]),reverse=True)
+		lenght=len(f2)
+		userlist=[]
+		"""for i in range(lenght):
+			#user=User.objects.get(id=f2[i][0])
+			f2[i][0]=f2[i][0].username#f2[i][0]=user.name"""
+	
+		problemlist=[]
+		for problem in problems:
+			problemlist.append(problem.name)
+		for a in f2:
+			a[1][1]=a[1][1]/60
 		
 	return render_to_response("ranking.html",{'problemlist':problemlist,'f2':f2,"num_of_probs":num_of_probs}, context_instance=RequestContext(request))
 
 	
 		
 	#f=sorted(f.items(), key=lambda x: (x[1][0]),reverse=True)
-	
+	t1=threading.Thread(target=update_rank(),args=(contest_id))
 	
 
 
@@ -97,7 +105,9 @@ def challenges(request,contest_id):
 		hour = int(timer/3600)
 		minute=int((timer%3600)/60)
 		second=int((timer%3600)%60)
-		msg="The contest ends in about "+str(hour)+" hours and "+str(minute)+" minutes and " + str(second) + " seconds from now"
+		msg="The contest begins in "+str(hour)+" hours "+str(minute)+" minutes " + str(second) + " seconds from now"
+		return render_to_response("challenges.html",{'cont':cont,'msg':msg},context_instance=RequestContext(request))
+
 	elif(t>cont.start_time+cont.time):
 		msg="The contest has ended"
 	else:
@@ -105,7 +115,10 @@ def challenges(request,contest_id):
 		hour = int(timer/3600)
 		minute=int((timer%3600)/60)
 		second=int((timer%3600)%60)
-		msg="The contest ends in about "+str(hour)+" hours and "+str(minute)+" minutes and " + str(second) + " seconds from now"
+		msg="The contest ends in "+str(hour)+" hours, "+str(minute)+" minutes and " + str(second) + " seconds from now"
+		z=t1.isAlive();
+		if z is False:
+			t1.start()
 	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,'msg':msg},context_instance=RequestContext(request))
 
 submission_message=''
