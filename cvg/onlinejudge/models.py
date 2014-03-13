@@ -30,22 +30,15 @@ class Problem(models.Model):
 	prob_dir = models.CharField(max_length=100)
 	def __unicode__(self):
 		return self.name
+	def __str__(self):
+		return self.name
 	def save(self, *args, **kwargs):
 		self.prob_dir = "media/problems/"+str(self.id)+"/"
 #Creating a Directory for this problem
 		subprocess.call(shlex.split("mkdir -p media/problems/"+str(self.id)))
 		self.check_script = self.prob_dir+"script.sh"
 		super(Problem, self).save(*args, **kwargs)
-"""
-class Image(models.Model):
-	image = models.ImageField(upload_to = "problems/"+str(self.problem.id)+str(self.problem.id))
-	problem = models.ForeignKey(Problem)
-
-class Script(models.Model):
-	name = models.FileField(upload_to = "problems/"+str(self.problem.id)+str(self.problem.id))
-	problem = models.OneToOneField(Problem)
-	def __del__(self):"""
-		
+	
 
 class CodeToCompile(models.Model):
 	user = models.ForeignKey(User)

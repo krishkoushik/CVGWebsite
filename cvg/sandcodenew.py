@@ -203,7 +203,7 @@ if __name__ == '__main__':
 	f = open(sys.argv[1]+"mes.txt","w")
 	f.write("Running Successful")
 	f.close()
-	s = Policy(["./"+sys.argv[1]+"output"]+sys.argv[5:],jail="./"+sys.argv[1],quota=dict(cpu=int(sys.argv[2]),disk=int(sys.argv[3]),memory=int(sys.argv[4]),wallclock=15000),owner="nobody",stderr=open("error.txt","w"))
+	s = Policy(["./"+sys.argv[1]+"output"]+sys.argv[5:],jail="./"+sys.argv[1],quota=dict(cpu=int(sys.argv[2]),disk=int(sys.argv[3]),memory=int(sys.argv[4]),wallclock=15000),stderr=open(sys.argv[1]+"error.txt","w"),stdout = open(str(sys.argv[1]+"stdout"),"w"))
 	s.run()
 	#print s.quota[0]
 	print "Result : "+str(s.result)
@@ -236,6 +236,8 @@ if __name__ == '__main__':
 		f.write("Not Run Properly "+str(s.result))
 		f.close()
 	print s.probe()
-
+	if s.result!=S_RESULT_OK:
+		fil = open(sys.argv[1]+"stdout","w");
+		fil.close()
 
 

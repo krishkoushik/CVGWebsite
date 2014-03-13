@@ -17,15 +17,54 @@
 </style>
 <link rel="stylesheet" href="{{STATIC_URL}}css/jquery.multilevelpushmenu.css">
 <style>
+body,html{
+height:100%;
+overflow-y:hidden;
+}
+#menu{
+
+position:relative;
+top:50px;
+height:100%;
+width:250px;
+}
 #pushobj {
 	position: absolute;
 	top: 55px;
 	left:18%;width:75%;
-	color: #0070c0;
+	height:87%;color: #0070c0;
 	background: #FFF;
 	font-family: 'Open Sans Condensed', sans-serif;
 	z-index: 1;
 	float:left;
+	overflow-y:scroll;
+}
+input[type=radio] {
+    padding-left:2px;
+    padding-right:2px;
+    border-radius:10px;
+
+    -webkit-appearance:button;
+
+    border: double 2px #00F;
+	background-color:#FFF;
+    color:#FFF;
+    white-space: nowrap;
+    overflow:hidden;
+
+    width:10px;
+    height:10px;
+}
+
+input[type=radio]:checked {
+    
+    background-color:#0b0095;
+    border-left-color:#06F;
+    border-right-color:#06F;
+}
+
+input[type=radio]:hover {
+    box-shadow:0px 0px 10px #1300ff;
 }
 </style> 	
 <script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>
@@ -33,7 +72,28 @@
 $(document).ready(function(){
 	// HTML markup implementation, overlap mode
 	$( '#menu' ).multilevelpushmenu({
-		containersToPush: [$( '#pushobj' )]
+		containersToPush: [$( '#pushobj' )],
+
+		        onItemClick: function() {
+            // First argument is original event object
+            var event = arguments[0],
+            // Second argument is menu level object containing clicked item (<div> element)
+                $menuLevelHolder = arguments[1],
+                // Third argument is clicked item (<li> element)
+                $item = arguments[2],
+                // Fourth argument is instance settings/options object
+                options = arguments[3];
+
+            // You can do some cool stuff here before
+            // redirecting to href location
+            // like logging the event or even
+            // adding some parameters to href, etc...
+
+            // Anchor href
+            var itemHref = $item.find( 'a:first' ).attr( 'href' );
+            // Redirecting the page
+            location.href = itemHref;
+        }
 	});
 });
 
@@ -43,7 +103,6 @@ $(document).ready(function(){
 
 </script>
 
-	
 	<div id="menu">
         <nav>
            
@@ -67,17 +126,21 @@ $(document).ready(function(){
 	{% autoescape off %}{{prob.statement}}{% endautoescape %}
 	
 	<br>
-		<a href="/onlinejudge/logout/">Logout</a>
+		<a class="btn btn-danger"style="color:#fff;position:fixed;top:50px;right:0%;" href="/onlinejudge/logout/">Logout</a>
 		<h4>{{message}}</h4>
 		<form enctype='multipart/form-data' action='/onlinejudge/upload_file/{{prob.id}}/' method='POST'>
 			{% csrf_token %}
 				{{form}}
-			<input type="submit" name="submit" value="Submit">
+			<input type="radio" name="lang" value="0" checked="checked">C++<br>
+			<input type="radio" name="lang" value="1">C<br>
+			<input type="submit" class="btn btn-primary" name="submit" value="Submit">
 		</form>
 		
 		
     
-    
+    <br>
+    <a class="btn btn-info" style="color:#FFF;float:right;position:relative;top:-50px;left:-50%;" href="/onlinejudge/viewsubmission/{{code.id}}">Submission Result</a>	
+    <br>
 		
 
 	
@@ -88,9 +151,9 @@ $(document).ready(function(){
 		{% csrf_token %}
 		<textarea id="code" name="code">
 		</textarea>
-		<button type="submit" class="btn btn-default">Submit</button><br>
 		<input type="radio" name="lang" value="0" checked="checked">C++<br>
 		<input type="radio" name="lang" value="1">C<br>
+		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 
 

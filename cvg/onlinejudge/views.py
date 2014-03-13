@@ -136,7 +136,7 @@ def practice(request):
 		return HttpResponseRedirect("/onlinejudge")
 	l=[]
 	for con in Contest.objects.all():
-		if con.id!=1 :
+		if con.id!=2 :
 			l.append(con);
 	contests = l
 	return render_to_response("practice.html",{'contests':contests,},context_instance=RequestContext(request))
@@ -180,7 +180,7 @@ def handle_uploaded_file(obid):
 	
 	print dir_jail_name+"hi"
 	#Creating the jail environment
-	subprocess.call(["bash","makejail.sh",dir_jail_name,],shell=False)
+	subprocess.call(["bash","makejail.sh",dir_jail_name,prob.prob_dir],shell=False)
 
 	#Running code and storing runtime message
 	
@@ -190,11 +190,16 @@ def handle_uploaded_file(obid):
 	runt.close()
 	if out==0 :
 		code.compilemessage = 'Successfully Compiled'
-		arg=shlex.split("sudo python sandcodenew.py "+dir_jail_name+" "+str(prob.time_limit)+" "+str(prob.disk_limit)+" "+str(prob.mem_limit)+" "+str(prob.arguements))
+		arg=shlex.split("bash script.sh "+dir_jail_name+" "+str(prob.time_limit)+" "+str(prob.disk_limit)+" "+str(prob.mem_limit))
 		runt = open(dir_jail_name+"runtimemessage.txt","wb+")
 		out1=subprocess.Popen(arg,stdout=runt,shell=False)
 #out2=subprocess.Popen(['bash','memcheck.sh',str(out1.pid),dir_jail_name,],shell=False);
 		stdo,stder = out1.communicate()
+		scor = open(dir_jail_name+"score","r");
+		temp = int(scor.read())
+		if(code.accepted<temp):
+			code.accepted = temp
+		scor.close()
 #		stdo,stder = out2.communicate()
 		runt.close()
 	else :
@@ -218,7 +223,6 @@ def handle_uploaded_file(obid):
 #subprocess.call(["rm","-f","compilemessage.txt","runtimemessage.txt","mes.txt","output"],shell=False)
 
 	
-	#To be transferred to another function
 
 
 
@@ -431,7 +435,7 @@ def home(request):
 		if con.id==1 :	
 			toretur = {'string':"",'curr_contest':con.contest.id}#to be extended for more contests
 			return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
-	toretur = {'string':"No Current Contests",'curr_contest':1}
+	toretur = {'string':"No Current Contests",'curr_contest':2}
 	return render_to_response("onlinejudgehome.html",toretur,context_instance=RequestContext(request))
 
 def editor(request,problem_id):

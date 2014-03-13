@@ -13,3 +13,7 @@ cp --parents /sbin/ldconfig.real ${1}
 cp --parents /etc/ld.so.conf ${1}
 cp --parents /etc/ld.so.conf.d/* ${1}
 cp ${2}* ${1} 
+#chmod 777 ${1}
+#touch "${1}stdout"
+#chmod 777 "${1}stdout"
+
