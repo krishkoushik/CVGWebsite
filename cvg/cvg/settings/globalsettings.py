@@ -114,7 +114,7 @@ INSTALLED_APPS = (
     'website',
     'onlinejudge',
     'blog',
-    'ckeditor',
+#'ckeditor',
     #'tagging',
     #'mptt',
     #'zinnia',

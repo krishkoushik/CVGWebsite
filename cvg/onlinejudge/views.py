@@ -7,12 +7,17 @@ from onlinejudge.models import RequestQueue, CurrentContest
 import os
 import subprocess,shlex
 from django.core.files import File
-import thread,time
+import thread,time,threading
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.models import User
 
+
+	
+
 def ranking(request,contest_id):
+	
+		
 	problems=Problem.objects.filter(contest=contest_id)
 	num_of_probs=problems.count()
 	mapping={}
@@ -21,30 +26,32 @@ def ranking(request,contest_id):
 	mapping[problem]=i
 	i=i+1
 	codes=CodeToCompile.objects.filter(problemid=problem)
-	
+	cont=Contest.objects.get(id=contest_id)
+
 	for j in range(problems.count()-1):
 		mapping[problems[j+1]]=i
 		i=i+1
 		codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
 	#print codes
-	
+
 	final={}
 	for code in codes:
 		if code.accepted is not 0:
 			if final.has_key(code.user):
 				final[code.user][0]=final[code.user][0]+code.accepted
-				final[code.user][1]=final[code.user][1]+code.time_of_submission
-				final[code.user][mapping[code.problemid]]=1
+				final[code.user][1]=final[code.user][1]+code.time_of_submission-cont.start_time
+				final[code.user][mapping[code.problemid]]=code.accepted
 			else:
 				final[code.user]=[]
 				final[code.user].append(code.accepted)
-				final[code.user].append(code.time_of_submission)
+				final[code.user].append(code.time_of_submission-cont.start_time)
+			
 				for problem in problems:
-					final[code.user].append(0)
-				final[code.user][mapping[code.problemid]]=1
+					final[code.user].append('-')
+				final[code.user][mapping[code.problemid]]=code.accepted
 				#final[code.user]["score"]=code.accepted
 				#final[code.user]["time"]=code.time
-				
+			
 	f=sorted(final.items(), key=lambda x: (x[1][1]))
 	f2=sorted(f, key=lambda x: (x[1][0]),reverse=True)
 	lenght=len(f2)
@@ -52,12 +59,16 @@ def ranking(request,contest_id):
 	"""for i in range(lenght):
 		#user=User.objects.get(id=f2[i][0])
 		f2[i][0]=f2[i][0].username#f2[i][0]=user.name"""
-		
+	
 	problemlist=[]
 	for problem in problems:
 		problemlist.append(problem.name)
+	for a in f2:
+		a[1][1]=a[1][1]/60
+		
+	return render_to_response("ranking.html",{'problemlist':problemlist,'f2':f2,"num_of_probs":num_of_probs}, context_instance=RequestContext(request))
+
 	
-	return render_to_response("ranking.html",{'problemlist':problemlist,'f2':f2,'userlenght':lenght,"num_of_probs":num_of_probs,},context_instance=RequestContext(request))
 		
 	#f=sorted(f.items(), key=lambda x: (x[1][0]),reverse=True)
 	
@@ -136,6 +147,8 @@ def practice(request):
 		return HttpResponseRedirect("/onlinejudge")
 	l=[]
 	for con in Contest.objects.all():
+		#cont = CurrentContest.objects.filter(contest=con)
+		#if(cont.size()
 		if con.id!=1 :
 			l.append(con);
 	contests = l
@@ -161,9 +174,9 @@ def handle_uploaded_file(obid):
 	prob = code.problemid
 	dir_jail_name = "media/code/"+str(code.user.id)+"_"+str(code.problemid.id)+"/"	
 	if code.language == 0:
-		arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
+		arg=shlex.split("g++ -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
 	else:
-		arg=shlex.split("gcc -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_superres.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
+		arg=shlex.split("gcc -I/usr/local/include/opencv -I/usr/local/include "+code.fil_e+" /usr/local/lib/libopencv_calib3d.so /usr/local/lib/libopencv_contrib.so /usr/local/lib/libopencv_core.so /usr/local/lib/libopencv_features2d.so /usr/local/lib/libopencv_flann.so /usr/local/lib/libopencv_gpu.so /usr/local/lib/libopencv_highgui.so /usr/local/lib/libopencv_imgproc.so /usr/local/lib/libopencv_legacy.so /usr/local/lib/libopencv_ml.so /usr/local/lib/libopencv_nonfree.so /usr/local/lib/libopencv_objdetect.so /usr/local/lib/libopencv_photo.so /usr/local/lib/libopencv_stitching.so /usr/local/lib/libopencv_ts.so /usr/local/lib/libopencv_video.so /usr/local/lib/libopencv_videostab.so -o "+dir_jail_name+"output")
 	print "in handle uploaded file"
 	comp = open(dir_jail_name+"compilemessage.txt","wb+")#creating a compile message file
 	out=subprocess.call(arg,stderr=comp,shell=False)
@@ -206,7 +219,7 @@ def handle_uploaded_file(obid):
 	fi.write(fil.read())
 	fil.close()
 	fi.close()
-
+	print "GenMAX"
 	fil = File(open(dir_jail_name+"mes.txt","r"))
 	code.runtimemessage = fil.readline()
 	fi.close()
