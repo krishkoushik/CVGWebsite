@@ -235,7 +235,7 @@ if __name__ == '__main__':
 		f = open(sys.argv[1]+"mes.txt","w")
 		f.write("Not Run Properly "+str(s.result))
 		f.close()
-	print s.probe()
+	a = s.probe('mem')
 	if s.result!=S_RESULT_OK:
 		fil = open(sys.argv[1]+"stdout","w");
 		fil.close()
