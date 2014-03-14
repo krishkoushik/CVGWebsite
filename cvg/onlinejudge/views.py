@@ -44,6 +44,7 @@ def update_rank(contest_id):
 			i=i+1
 			codes=codes|CodeToCompile.objects.filter(problemid=problems[j+1])
 		#print codes
+#print "peace"
 
 		final={}
 		for code in codes:
@@ -82,7 +83,7 @@ def update_rank(contest_id):
 	
 		
 	#f=sorted(f.items(), key=lambda x: (x[1][0]),reverse=True)
-t1=threading.Thread(target=update_rank,args=2)
+t1=threading.Thread(target=update_rank,args=(2,))
 
 
 def contest(request,contest_id):
@@ -118,9 +119,10 @@ def challenges(request,contest_id):
 		minute=int((timer%3600)/60)
 		second=int((timer%3600)%60)
 		msg="The contest ends in "+str(hour)+" hours, "+str(minute)+" minutes and " + str(second) + " seconds from now"
-		z=t1.isAlive();
-		if z is False:
-			t1.start()
+#		z=t1.isAlive();
+#		print z
+#if z is False:
+#			t1.start()
 	return render_to_response("challenges.html",{'problems':Problem.objects.filter(contest=cont),'cont':cont,'msg':msg},context_instance=RequestContext(request))
 
 submission_message=''
