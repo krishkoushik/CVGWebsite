@@ -27,6 +27,7 @@ def ranking(request,contest_id):
 	
 
 def update_rank(contest_id):
+	
 	while True:	
 		problems=Problem.objects.filter(contest=contest_id)
 		num_of_probs=problems.count()
@@ -76,12 +77,12 @@ def update_rank(contest_id):
 		for a in f2:
 			a[1][1]=a[1][1]/60
 
+		
 
 	
 		
 	#f=sorted(f.items(), key=lambda x: (x[1][0]),reverse=True)
 t1=threading.Thread(target=update_rank,args=2)
-	
 
 
 def contest(request,contest_id):
@@ -268,9 +269,9 @@ def viewsubmission(request,obid):
 		a = open(code.fil_e,"r")
 		b = open(code.compileoutp,"r")
 		c = open(code.runtimeoutp,"r")
-		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code,'cont':cont,'problems':Problem.objects.filter(contest=cont)},context_instance=RequestContext(request))
+		return render_to_response('submitted.html', {'fil_e':a,'compile':b,'runtime':c,'code':code,'cont':cont,'problems':Problem.objects.filter(contest=cont),'score':code.accepted,},context_instance=RequestContext(request))
 	else : 
-		return render_to_response('runn.html',{'obid':obid,'cont':cont,'problems':Problem.objects.filter(contest=cont)},context_instance=RequestContext(request))
+		return render_to_response('runn.html',{'obid':obid,'cont':cont,'problems':Problem.objects.filter(contest=cont),},context_instance=RequestContext(request))
 
 def upload_file(request,problem_id):
 	if request.user.is_anonymous():

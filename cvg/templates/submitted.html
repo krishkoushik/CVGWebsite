@@ -33,13 +33,14 @@
 		</pre>
 		<hr>
 		<h3>{{ code.runtimemessage }}</h3>
+		<h4>Best Score for problem so far: {{score}}</h4>
 		<hr>
 
 <pre>
 	<code>
-		{% for i in fil_e %}
-		{{ i }}
-		{% endfor %}
+{% for i in fil_e %}
+	{{ i }}
+{% endfor %}
 	</code>
 </pre>
 		<a href="/onlinejudge">Home</a>
@@ -62,14 +63,6 @@
             </nav>
         </div>
 	
-	
-	
-	
-
-		
-		
-		
-		
 	</body>
 </html>
 <script src="{{STATIC_URL}}js/jquery.multilevelpushmenu.min.js"></script>

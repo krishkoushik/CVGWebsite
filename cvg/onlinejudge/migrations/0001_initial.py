@@ -29,8 +29,13 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('name', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('statement', self.gf('ckeditor.fields.RichTextField')()),
-            ('compile_line', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('arguements', self.gf('django.db.models.fields.CharField')(max_length=300)),
+            ('time_limit', self.gf('django.db.models.fields.IntegerField')()),
+            ('mem_limit', self.gf('django.db.models.fields.IntegerField')()),
+            ('disk_limit', self.gf('django.db.models.fields.IntegerField')()),
             ('contest', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Contest'])),
+            ('check_script', self.gf('django.db.models.fields.CharField')(max_length=100)),
+            ('prob_dir', self.gf('django.db.models.fields.CharField')(max_length=100)),
         ))
         db.send_create_signal(u'onlinejudge', ['Problem'])
 
@@ -46,7 +51,9 @@ class Migration(SchemaMigration):
             ('problemid', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['onlinejudge.Problem'])),
             ('status', self.gf('django.db.models.fields.CharField')(max_length=100)),
             ('processed', self.gf('django.db.models.fields.CharField')(max_length=1)),
-            ('time_of_submission', self.gf('django.db.models.fields.IntegerField')()),
+            ('time_of_submission', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('accepted', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
+            ('language', self.gf('django.db.models.fields.IntegerField')(null=True, blank=True)),
         ))
         db.send_create_signal(u'onlinejudge', ['CodeToCompile'])
 
@@ -114,16 +121,18 @@ class Migration(SchemaMigration):
         },
         u'onlinejudge.codetocompile': {
             'Meta': {'object_name': 'CodeToCompile'},
+            'accepted': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'compilemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'compileoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'fil_e': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'language': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'problemid': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Problem']"}),
             'processed': ('django.db.models.fields.CharField', [], {'max_length': '1'}),
             'runtimemessage': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'runtimeoutp': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'status': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'time_of_submission': ('django.db.models.fields.IntegerField', [], {}),
+            'time_of_submission': ('django.db.models.fields.IntegerField', [], {'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['auth.User']"})
         },
         u'onlinejudge.contest': {
@@ -140,11 +149,16 @@ class Migration(SchemaMigration):
         },
         u'onlinejudge.problem': {
             'Meta': {'object_name': 'Problem'},
-            'compile_line': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'arguements': ('django.db.models.fields.CharField', [], {'max_length': '300'}),
+            'check_script': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
             'contest': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['onlinejudge.Contest']"}),
+            'disk_limit': ('django.db.models.fields.IntegerField', [], {}),
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'mem_limit': ('django.db.models.fields.IntegerField', [], {}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
-            'statement': ('ckeditor.fields.RichTextField', [], {})
+            'prob_dir': ('django.db.models.fields.CharField', [], {'max_length': '100'}),
+            'statement': ('ckeditor.fields.RichTextField', [], {}),
+            'time_limit': ('django.db.models.fields.IntegerField', [], {})
         },
         u'onlinejudge.requestqueue': {
             'Meta': {'object_name': 'RequestQueue'},

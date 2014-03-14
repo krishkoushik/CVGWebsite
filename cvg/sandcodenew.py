@@ -4,7 +4,6 @@ import sys
 from ctypes import Structure, sizeof
 from ctypes import c_uint32, c_uint64, c_int32, c_int64, c_int
 from platform import system, machine
-from sandbox import *
 
 # check platform type
 if system() not in ('Linux', ) or machine() not in ('x86_64', 'i686', ):
